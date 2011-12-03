@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class GASVRegionReader
 {
@@ -26,18 +24,14 @@ public class GASVRegionReader
 		}
 	}
 	
-	public List<GASVRegion> read() throws IOException
+	public void read(SplitReadWorker srw) throws IOException
 	{	
-		List<GASVRegion> allRegions = new LinkedList<GASVRegion>();
-		
 		String line;
 		while ((line = m_reader.readLine()) != null)
 		{
 			GASVRegion region = new GASVRegion(line.split("\t"));
-			allRegions.add(region);
+			srw.processOneRegion(region);
 		}
-		
-		return allRegions;
 	}
 
 }
