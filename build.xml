@@ -1,0 +1,50 @@
+<project name="SplitReadGASV" default="dist" basedir=".">
+    <description>
+        Build file for SplitReadGASV code
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="build"/>
+  <property name="lib" location="lib"/>
+  
+  <!-- include external jars -->
+  <path id="GASV.classpath">
+    <fileset dir="${lib}" >
+      <include name="sam-1.56.jar"/>
+	  <include name="javagene.jar"/>
+    </fileset>
+  </path>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} directory tree -->
+    <delete dir="${build}"/>
+  </target>
+
+  <target name="init" depends="clean">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+	<javac srcdir="${src}" includeantruntime="false" classpathref="GASV.classpath" destdir="${build}"/>
+  </target>
+  
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+
+    <!-- make jar file -->
+    <jar jarfile="${dist}/SplitReadGASV.jar" basedir="${build}">
+      <zipgroupfileset dir="${lib}" includes="*.jar"/>
+      <manifest>
+        <attribute name="Main-Class" value="splitread.SplitReadMain"/>
+      </manifest>
+    </jar>
+  </target>
+</project>
+

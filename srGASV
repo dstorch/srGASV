@@ -1,0 +1,14 @@
+#!/usr/local/bin/bash
+
+ARGNUM=$#
+GASVOUT=$1
+BAMFILE=$2
+
+if [ $ARGNUM = 0 ]; then
+  echo "usage message"
+else
+  java -jar build/SplitReadGASV.jar $GASVOUT $BAMFILE 
+fi
+
+
+
