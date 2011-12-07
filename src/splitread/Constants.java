@@ -2,22 +2,19 @@ package splitread;
 
 public class Constants
 {
+	// directory storing reference sequence
+	public static String HG_PATH = "data/hg17/";
+	
 	// make these more reasonable, or determined by GASV out
-	public static final int FRAG_LENGTH_MIN = 100;
-	public static final int FRAG_LENGTH_MAX = 400;
-	public static final int MIN_MAPQ = 30;
+	public static int FRAG_LENGTH_MIN = 100;
+	public static int FRAG_LENGTH_MAX = 1000;
+	public static int MIN_MAPQ = 35;
 	
 	// GASV outfile column numbers
+	public static final int COL_CLUST_NAME = 0;
 	public static final int COL_LPOS = 5;
 	public static final int COL_RPOS = 6;
 	public static final int COL_COORDS = 7;
-	
-	// reading and writing BAM
-	public static final String BAM_EXTENSION = "_srGasv";
-	
-	// reading fasta
-	public static final int FASTA_BUFSIZE = 1000;
-	public static final String FASTA_TMPFILE = "data/hg19/temp.fa";
 	
     public static final int GAP = 2;
     private static final int[][] m_matchScores = 

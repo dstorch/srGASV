@@ -37,22 +37,30 @@ public class BAMReader
 		}
 		else
 		{
-			it = m_reader.query(chromosome.toString(), region.v, region.v +Constants.FRAG_LENGTH_MAX, false);
+			it = m_reader.query(chromosome.toString(), region.v, region.v + Constants.FRAG_LENGTH_MAX, false);
 		}
 
 		SAMRecord curRecord;
 		while (it.hasNext())
-		{
+		{	
 			curRecord = it.next();
-
-			int mapq = curRecord.getMappingQuality();
 			boolean hasMate = curRecord.getReadPairedFlag();
-			boolean mateUnmapped = curRecord.getMateUnmappedFlag();
-
-			if (hasMate && mateUnmapped && mapq >= Constants.MIN_MAPQ)
+			
+			if (hasMate)
 			{
-				candidates.add(curRecord.getReadName());
+				boolean mateUnmapped = curRecord.getMateUnmappedFlag();
+				int mapq = curRecord.getMappingQuality();
+				
+				boolean oriented = curRecord.getReadNegativeStrandFlag();
+				if (left) oriented = !oriented;
+				
+				if (mateUnmapped && oriented && mapq >= Constants.MIN_MAPQ)
+				{	
+					candidates.add(curRecord.getReadName());
+				}
 			}
+			
+
 		}
 
 		// close the iterator once iteration is complete
@@ -72,7 +80,7 @@ public class BAMReader
 		}
 		else
 		{
-			it = m_reader.query(chromosome.toString(), region.v, region.v +Constants.FRAG_LENGTH_MAX, false);
+			it = m_reader.query(chromosome.toString(), region.v, region.v + Constants.FRAG_LENGTH_MAX, false);
 		}
 
 		SAMRecord curRecord;

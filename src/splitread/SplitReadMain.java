@@ -19,6 +19,11 @@ public class SplitReadMain
     		throw new IllegalArgumentException("could not find BAM file: " + bamfile.getName());
     	}
     	
+    	Constants.FRAG_LENGTH_MIN = Integer.parseInt(args[2]);
+    	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[3]);
+    	Constants.MIN_MAPQ = Integer.parseInt(args[4]);
+    	Constants.HG_PATH = args[5];
+    	
     	SplitReadWorker srw = new SplitReadWorker(bamfile, gasvOutfile);
     	srw.processGASVOut();
     }

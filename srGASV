@@ -1,13 +1,25 @@
 #!/usr/local/bin/bash
 
+#########################################
+# Set parameters
+LMIN=100
+LMAX=400
+MIN_MAPQ=35
+HG_PATH=data/hg18/
+#########################################
+
 ARGNUM=$#
 GASVOUT=$1
 BAMFILE=$2
+JARFILE=build/SplitReadGASV.jar
+
+COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE \
+		$LMIN $LMAX $MIN_MAPQ $HG_PATH"
 
 if [ $ARGNUM = 0 ]; then
   echo "usage message"
 else
-  java -jar build/SplitReadGASV.jar $GASVOUT $BAMFILE 
+  $COMMAND
 fi
 
 

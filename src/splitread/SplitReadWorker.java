@@ -45,17 +45,23 @@ public class SplitReadWorker
 		
 		List<SAMRecord> splits = m_bamreader.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
 		
+		// the number of mates should always equal the number of candidate split reads
+		assert(mates.size() == splits.size());
+		
     	for (SAMRecord record : splits)
     	{
     		Aligner aligner = new Aligner(record, region);
     		Alignment alignment = aligner.align();
-    		System.out.println("read name " + record.getReadName());
-    		alignment.print();
+        	alignment.print();
     	}
 	}
 	
 	public void processOneRegion(GASVRegion region)
 	{
+		System.out.println(region);
+		System.out.println(region.getFragX());
+		System.out.println(region.getFragY());
+		
 		// TODO remove this
 		System.out.println("left region");
 		System.out.println((region.getRegionX().u - Constants.FRAG_LENGTH_MAX) + "-" + region.getRegionX().u);
@@ -64,7 +70,7 @@ public class SplitReadWorker
 		System.out.println("right region");
 		System.out.println(region.getRegionY().v + "-" + (region.getRegionY().v + Constants.FRAG_LENGTH_MAX));
 		oneSideSplitreads(region, false);
-		System.out.print("\n");
+		System.out.print("\n\n\n=====================\n");
 	}
 	
 	public void processGASVOut() throws IOException, InterruptedException

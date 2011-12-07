@@ -35,6 +35,8 @@ public class Aligner
 		m_minLocations = new int[m_read.length + 1];
 
 		m_builder = Alignment.createBuilder();
+		
+		m_builder.setGASVRegion(m_gasvRegion).setSAMRecord(m_samRecord);
 	}
 
 	public Alignment align()
@@ -193,7 +195,7 @@ public class Aligner
 		for (int counter = curJ - 1; counter >= 0; counter--)
 		{
 			m_builder.appendRead('-');
-			m_builder.appendReference(m_region2[counter]);
+			m_builder.appendReference(m_region1[counter]);
 		}
 
 		return m_builder.build();

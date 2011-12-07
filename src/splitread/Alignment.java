@@ -1,7 +1,11 @@
 package splitread;
 
+import net.sf.samtools.SAMRecord;
+
 public class Alignment
 {
+	private final SAMRecord m_samRecord;
+	private final GASVRegion m_gasvRegion;
 
 	private final int m_score;
 	private final int m_bp1;
@@ -13,6 +17,8 @@ public class Alignment
 
 	private Alignment(AlignmentBuilder builder)
 	{
+		m_samRecord = builder.getSAMRecord();
+		m_gasvRegion = builder.getGASVRegion();
 		m_score = builder.getScore();
 		m_bp1 = builder.getBP1();
 		m_bp2 = builder.getBP2();
@@ -29,6 +35,9 @@ public class Alignment
 
 	public static class AlignmentBuilder
 	{
+		private SAMRecord samRecord;
+		private GASVRegion gasvRegion;
+		
 		private int score;
 		private int bp1;
 		private int bp2;
@@ -47,6 +56,28 @@ public class Alignment
 		{
 			this.score = score;
 			return this;
+		}
+		
+		public AlignmentBuilder setSAMRecord(SAMRecord record)
+		{
+			this.samRecord = record;
+			return this;
+		}
+		
+		public SAMRecord getSAMRecord()
+		{
+			return this.samRecord;
+		}
+		
+		public AlignmentBuilder setGASVRegion(GASVRegion region)
+		{
+			this.gasvRegion = region;
+			return this;
+		}
+		
+		public GASVRegion getGASVRegion()
+		{
+			return this.gasvRegion;
 		}
 		
 		public AlignmentBuilder setBP1(int bp1, int chromosome1)
@@ -119,6 +150,9 @@ public class Alignment
 
 	public void print()
 	{
+		System.out.println("cluster name: " + m_gasvRegion.getClusterName());
+		System.out.println("read name: " + m_samRecord.getReadName());
+		System.out.println("GASV regions: " + m_gasvRegion);
 		System.out.println("breakpoints: " + m_chr1 + ":" + m_bp1 + ", " + m_chr2 + ":" + m_bp2);
 		System.out.println("alignment score: " + m_score);
 		System.out.println(m_referenceAlignment);

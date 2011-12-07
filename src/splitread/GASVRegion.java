@@ -16,12 +16,15 @@ public class GASVRegion
 	private char[] m_fragX;
 	private char[] m_fragY;
 	
+	private String m_clusterName;
 	private Set<String> m_readNames;
 
 	public GASVRegion(String[] cols) throws IOException
 	{
 		m_leftChromosome = Integer.parseInt(cols[Constants.COL_LPOS].trim());
 		m_rightChromosome = Integer.parseInt(cols[Constants.COL_RPOS].trim());
+		m_clusterName = cols[Constants.COL_CLUST_NAME].trim();
+		
 		m_coords = new LinkedList<Point>();
 
 		m_regionX = new Point(Integer.MAX_VALUE, Integer.MIN_VALUE);
@@ -47,6 +50,13 @@ public class GASVRegion
 		IReferenceGenome genome = IReferenceGenome.GenomeFactory.getInstance();
 		m_fragX = genome.getFragment(m_leftChromosome, m_regionX);
 		m_fragY = genome.getFragment(m_rightChromosome, m_regionY);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return m_leftChromosome + ":" + getRegionX().u + "-" + getRegionX().v + ", " +
+		       m_rightChromosome + ":" + getRegionY().u + "-" + getRegionY().v;
 	}
 	
 	public void setCandidateReads(Set<String> readNames)
@@ -92,6 +102,11 @@ public class GASVRegion
 	public char[] getFragY()
 	{
 		return m_fragY;
+	}
+	
+	public String getClusterName()
+	{
+		return m_clusterName;
 	}
 
 }

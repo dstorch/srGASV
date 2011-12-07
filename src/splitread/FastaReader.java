@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FastaReader implements IReferenceGenome
-{
-	// directory storing reference sequence
-	private static final String HG_PATH = "data/hg19/";
-	
+{	
 	@Override
 	public char[] getFragment(int chromosome, Point point) throws IOException
 	{
@@ -36,7 +33,7 @@ public class FastaReader implements IReferenceGenome
 
 	private String getFastaName(int chromosome)
 	{
-		return HG_PATH + "chr" + chromosome + ".fa";
+		return Constants.HG_PATH + "chr" + chromosome + ".fa";
 	}
 	
 }
