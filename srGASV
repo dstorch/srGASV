@@ -5,19 +5,19 @@
 LMIN=100
 LMAX=400
 MIN_MAPQ=35
-HG_PATH=data/hg18/
 #########################################
 
 ARGNUM=$#
 GASVOUT=$1
 BAMFILE=$2
+FASTAFILE=$3
 JARFILE=build/SplitReadGASV.jar
 
-COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE \
-		$LMIN $LMAX $MIN_MAPQ $HG_PATH"
+COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE $FASTAFILE \
+		$LMIN $LMAX $MIN_MAPQ"
 
-if [ $ARGNUM = 0 ]; then
-  echo "usage message"
+if [ $ARGNUM != 3 ]; then
+  echo "usage: srGASV <GASVoutfile> <reads.bam> <reference.fasta>"
 else
   $COMMAND
 fi

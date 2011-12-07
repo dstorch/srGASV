@@ -33,5 +33,10 @@ public class GASVRegionReader
 			srw.processOneRegion(region);
 		}
 	}
+	
+	public void close() throws IOException
+	{
+		m_reader.close();
+	}
 
 }

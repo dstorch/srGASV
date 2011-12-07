@@ -5,14 +5,16 @@ import java.io.InputStream;
 
 public class FastaReader implements IReferenceGenome
 {	
+	
+	private String m_fastaName;
+	
 	@Override
 	public char[] getFragment(int chromosome, Point point) throws IOException
 	{
 		String chrstring = "chr" + Integer.toString(chromosome);
-		String chrfile = getFastaName(chromosome);
 		String regstr = chrstring + ":" + point.u + "-" + point.v;
 		
-		String command = "samtools faidx " + chrfile + " " + regstr;
+		String command = "samtools faidx " + m_fastaName + " " + regstr;
 		Process child = Runtime.getRuntime().exec(command);
 		
 		InputStream instream = child.getInputStream();
@@ -28,12 +30,15 @@ public class FastaReader implements IReferenceGenome
 			}
 		}
 		
+		// TODO is this necessary?
+		child.destroy();
+		
 		return result.toCharArray();
 	}
-
-	private String getFastaName(int chromosome)
+	
+	public void setFastaName(String fastaName)
 	{
-		return Constants.HG_PATH + "chr" + chromosome + ".fa";
+		m_fastaName = fastaName;
 	}
 	
 }

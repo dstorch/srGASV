@@ -16,4 +16,6 @@ public interface IReferenceGenome
 	}
 	
 	char[] getFragment(int chromosome, Point point) throws FileNotFoundException, IOException;
+	
+	public void setFastaName(String fastaName);
 }

@@ -12,7 +12,7 @@ public class SplitReadWorker
 	private BAMReader m_bamreader;
 	private GASVRegionReader m_grr;
 	
-	public SplitReadWorker(File bamfile, File gasvOutfile)
+	public SplitReadWorker(File bamfile, File gasvOutfile) throws SplitReadException
 	{
 		m_bamreader = new BAMReader(bamfile);
 		m_grr = new GASVRegionReader(gasvOutfile);
@@ -76,5 +76,15 @@ public class SplitReadWorker
 	public void processGASVOut() throws IOException, InterruptedException
 	{
 		m_grr.read(this);
+	}
+	
+	public void cleanup()
+	{
+		try
+		{
+			m_grr.close();
+			m_bamreader.close();
+		}
+		catch (IOException e) {}
 	}
 }

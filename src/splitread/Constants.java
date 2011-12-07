@@ -1,10 +1,7 @@
 package splitread;
 
 public class Constants
-{
-	// directory storing reference sequence
-	public static String HG_PATH = "data/hg17/";
-	
+{	
 	// make these more reasonable, or determined by GASV out
 	public static int FRAG_LENGTH_MIN = 100;
 	public static int FRAG_LENGTH_MAX = 1000;

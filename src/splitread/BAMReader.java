@@ -19,10 +19,15 @@ public class BAMReader
 {
 	private SAMFileReader m_reader;
 
-	public BAMReader(File bamfile)
+	public BAMReader(File bamfile) throws SplitReadException
 	{
 		m_reader = new SAMFileReader(bamfile);
 		m_reader.setValidationStringency(SAMFileReader.ValidationStringency.SILENT);
+		
+		if (!m_reader.hasIndex())
+		{
+			throw new SplitReadException("BAM file has no index");
+		}
 	}
 
 	// TODO make the criteria for picking candidates are sound
@@ -98,6 +103,11 @@ public class BAMReader
 		it.close();
 
 		return candidates;
+	}
+	
+	public void close()
+	{
+		m_reader.close();
 	}
 
 }
