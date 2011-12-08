@@ -5,7 +5,7 @@
 LMIN=100
 LMAX=400
 MIN_MAPQ=0
-DELTA_WINDOW=100
+DELTA_WINDOW=0
 UNMAPPED_BAM=data/venter/venterResorted_unmapped.bam
 CHR_PREFIX=chr
 #########################################

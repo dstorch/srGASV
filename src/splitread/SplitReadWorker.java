@@ -78,11 +78,11 @@ public class SplitReadWorker
 	public void processOneRegion(GASVRegion region) throws SplitReadException
 	{
 		// make sure that regions are correctly arranged
-		if (region.getRegionX().v >= region.getRegionY().u)
+		/*if (region.getRegionX().v >= region.getRegionY().u)
 		{
-			//System.err.println("invalid candidate read configuration");
+			System.err.println("invalid candidate read configuration");
 			return;
-		}
+		}*/
 		
 		System.out.println(region);
 		System.out.println(region.getFragX());

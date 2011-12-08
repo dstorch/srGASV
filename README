@@ -10,7 +10,8 @@
 #
 # Contents:
 #   1. Usage
-#   2. Options
+#   2. Building
+#   3. Parameters
 #
 ##################################################
 
@@ -23,9 +24,76 @@ srGASV <GASV.out> <reads.bam> <reference.fasta>
 There are three required arguments, as shown above.
 The first is a tab-delimited plaintext file with
 the following columns:
+                                        Example
+    1. Cluster Name                     c622_-22.4248_-696.71	
+	2. Number of Supporting Fragments:  11	
+	3. Localization:                    99.2	
+	4. Variant Type:                    D	
+	5. Supporting Fragments:            IL11_266:7:129:793:665, IL22_307:8:274:923:595, SRR010933.5337657, etc.
+	6. LeftChromosome:                  1
+	7. Right Chromosome:                1	
+	8. Coordinates in Polygon:          34874107, 34884613, 34874008, 34884613, 34873958, 34884563, etc.
 
+The second input file is a BAM file containing
+the reads. srGASV will scan this file looking for
+candidate split reads. This file must be indexed,
+i.e. it must have a corresponding .bam.bai file
+in the same directory.
+
+The third input file is the reference sequence to
+which the reads were aligned, in fasta format. The
+fasta files should first be indexed using "samtools faidx".
+srGASV will extract windows of sequence from this file,
+and then attempt to align candidate split reads to
+this window.   
 
 ##################################################
-2. Options
+2. Building
 ##################################################
+
+Before running srGASV as described above, the Java
+code must be compiled using the Apache Ant build tool.
+If Ant is installed, then type "ant" when working
+in the srGASV root directory.
+
+##################################################
+3. Parameters
+##################################################
+
+Parameters are set by editing the srGASV bash script
+before running.
+
+LMIN - minimum fragment length
+  Along with LMAX, this determines the region where
+  we look for anchored reads whose mate might be
+  a split read.
+
+LMAX - maximum fragment length
+  Along with LMIN, this determines the region where
+  we look for anchored reads whose mate might be
+  a split read.
+
+MIN_MAPQ - minimum mapping quality
+  Reads are only taken as anchors if their mapping
+  quality is greater than or equal to this threshold.
+
+DELTA_WINDOW - increase in GASV prediction window size
+  If a predicted GASV breakpoint region is [a, b],
+  then srGASV will align potential split reads to the
+  window [a - DELTA_WINDOW, b + DELTA_WINDOW]. Set to
+  zero to use the GASV regions.
+
+UNMAPPED_BAM - BAM file containing all unmapped reads
+  If set to the string "default", then srGASV assumes
+  that unmapped reads are in the same file as their
+  mapped mates, and are given the same genome
+  coordindates as their mapped mate. Otherwise,
+  srGASV scans the file indicated by this parameter
+  in order to find unmapped mates.
+
+CHR_PREFIX - naming convention for chromosomes
+  If chromosome 17 is named as "17", set this
+  parameter to "default". If the convention is
+  "chr17", then set this parameter to "chr".
+
 

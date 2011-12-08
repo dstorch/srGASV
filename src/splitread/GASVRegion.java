@@ -91,7 +91,6 @@ public class GASVRegion
 			if (c2 < m_regionY.u) m_regionY.u = c2;
 			if (c2 > m_regionY.v) m_regionY.v = c2;
 		}
-
 	}
 	
 	@Override
