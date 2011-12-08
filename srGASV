@@ -4,7 +4,9 @@
 # Set parameters
 LMIN=100
 LMAX=400
-MIN_MAPQ=35
+MIN_MAPQ=0
+UNMAPPED_BAM=default #data/venter/venterResorted_unmapped.bam
+CHR_PREFIX=default #chr
 #########################################
 
 ARGNUM=$#
@@ -14,13 +16,11 @@ FASTAFILE=$3
 JARFILE=build/SplitReadGASV.jar
 
 COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE $FASTAFILE \
-		$LMIN $LMAX $MIN_MAPQ"
+		$LMIN $LMAX $MIN_MAPQ $UNMAPPED_BAM $CHR_PREFIX"
 
 if [ $ARGNUM != 3 ]; then
   echo "usage: srGASV <GASVoutfile> <reads.bam> <reference.fasta>"
 else
   $COMMAND
 fi
-
-
 

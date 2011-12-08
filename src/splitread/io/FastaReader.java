@@ -1,7 +1,10 @@
-package splitread;
+package splitread.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import splitread.Point;
+import splitread.Utils;
 
 public class FastaReader implements IReferenceGenome
 {	
@@ -24,7 +27,7 @@ public class FastaReader implements IReferenceGenome
 		while ((c = instream.read()) != -1)
 		{
 			char letter = Character.toLowerCase((char) c);
-			if (Constants.isDNALetter(letter))
+			if (Utils.isDNALetter(letter))
 			{
 				result += (char) c;	
 			}

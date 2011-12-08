@@ -1,0 +1,31 @@
+##################################################
+#  srGASV - Split Read GASV
+#
+# Split read analysis using the output of
+# geometric analysis for structural variants.
+#
+# Author:
+#   David Storch
+#   dstorch@cs.brown.edu
+#
+# Contents:
+#   1. Usage
+#   2. Options
+#
+##################################################
+
+##################################################
+1. Usage
+##################################################
+
+srGASV <GASV.out> <reads.bam> <reference.fasta>
+
+There are three required arguments, as shown above.
+The first is a tab-delimited plaintext file with
+the following columns:
+
+
+##################################################
+2. Options
+##################################################
+

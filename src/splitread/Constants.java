@@ -2,13 +2,16 @@ package splitread;
 
 public class Constants
 {	
-	// make these more reasonable, or determined by GASV out
+	// defaults overridden by values passed from srGASV wrapper
 	public static int FRAG_LENGTH_MIN = 100;
 	public static int FRAG_LENGTH_MAX = 1000;
 	public static int MIN_MAPQ = 35;
 	
+	public static String CHR_PREFIX = "";
+	
 	// GASV outfile column numbers
 	public static final int COL_CLUST_NAME = 0;
+	public static final int COL_SV_TYPE = 3;
 	public static final int COL_LPOS = 5;
 	public static final int COL_RPOS = 6;
 	public static final int COL_COORDS = 7;
@@ -31,17 +34,9 @@ public class Constants
       else throw new IllegalArgumentException("non-DNA letter: " + letter);
     }
     
-    public static boolean isDNALetter(char letter)
-    {
-    	return (letter == 'a' || letter == 'A' ||
-    			letter == 'g' || letter == 'G' ||
-    			letter == 'c' || letter == 'C' ||
-    			letter == 't' || letter == 'T' ||
-    			letter == 'n' || letter == 'N');
-    }
-    
     public static int matchScore(char c1, char c2)
     {
       return m_matchScores[convertToCode(c1)][convertToCode(c2)];
     }
+    
 }

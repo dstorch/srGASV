@@ -5,17 +5,28 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import splitread.align.Aligner;
+import splitread.align.Alignment;
+import splitread.io.BAMReader;
+import splitread.io.GASVRegionReader;
+
 import net.sf.samtools.SAMRecord;
 
 public class SplitReadWorker
 {
 	private BAMReader m_bamreader;
+	private BAMReader m_unmappedBamreader = null;
 	private GASVRegionReader m_grr;
 	
-	public SplitReadWorker(File bamfile, File gasvOutfile) throws SplitReadException
+	public SplitReadWorker(File bamfile, File gasvOutfile, File unmappedFile) throws SplitReadException
 	{
 		m_bamreader = new BAMReader(bamfile);
 		m_grr = new GASVRegionReader(gasvOutfile);
+		
+		if (unmappedFile.exists() && unmappedFile.isFile())
+		{
+			m_unmappedBamreader = new BAMReader(unmappedFile);
+		}
 	}
 	
 	public static void stopWorking(String message)
@@ -35,29 +46,44 @@ public class SplitReadWorker
 		return chars;
 	}
 	
-	public void oneSideSplitreads(GASVRegion region, boolean left)
+	public void oneSideSplitreads(GASVRegion region, boolean left) throws SplitReadException
 	{
 		Point location;
 		if (left) location = region.getRegionX();
 		else location = region.getRegionY();
 		
-		Set<String> mates = m_bamreader.getSplitreadMates(region.getLeftChromosome(), location, left);
+		Set<SAMRecord> mates = m_bamreader.getSplitreadMates(region.getLeftChromosome(), location, left);
 		
-		List<SAMRecord> splits = m_bamreader.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
+		List<SAMRecord> splits;
+		if (m_unmappedBamreader != null)
+		{
+			splits = m_unmappedBamreader.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
+		}
+		else
+		{
+			splits = m_bamreader.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
+		}
 		
 		// the number of mates should always equal the number of candidate split reads
-		assert(mates.size() == splits.size());
+		//if (mates.size() != splits.size()) throw new SplitReadException("matching mates not found");
 		
     	for (SAMRecord record : splits)
     	{
-    		Aligner aligner = new Aligner(record, region);
+    		Aligner aligner = Aligner.create(record, region, left);
     		Alignment alignment = aligner.align();
         	alignment.print();
     	}
 	}
 	
-	public void processOneRegion(GASVRegion region)
+	public void processOneRegion(GASVRegion region) throws SplitReadException
 	{
+		// make sure that regions are correctly arranged
+		if (region.getRegionX().v >= region.getRegionY().u)
+		{
+			//System.err.println("invalid candidate read configuration");
+			return;
+		}
+		
 		System.out.println(region);
 		System.out.println(region.getFragX());
 		System.out.println(region.getFragY());
@@ -73,7 +99,7 @@ public class SplitReadWorker
 		System.out.print("\n\n\n=====================\n");
 	}
 	
-	public void processGASVOut() throws IOException, InterruptedException
+	public void processGASVOut() throws IOException, InterruptedException, SplitReadException
 	{
 		m_grr.read(this);
 	}
@@ -84,6 +110,8 @@ public class SplitReadWorker
 		{
 			m_grr.close();
 			m_bamreader.close();
+			
+			if (m_unmappedBamreader != null) m_unmappedBamreader.close();
 		}
 		catch (IOException e) {}
 	}

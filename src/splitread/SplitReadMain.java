@@ -3,6 +3,8 @@ package splitread;
 import java.io.File;
 import java.io.IOException;
 
+import splitread.io.IReferenceGenome;
+
 public class SplitReadMain
 {
     public static void main(String[] args)
@@ -10,6 +12,7 @@ public class SplitReadMain
     	File gasvOutfile = new File(args[0]);
     	File bamfile = new File(args[1]);
     	File fastafile = new File(args[2]);
+    	File unmappedfile = new File(args[6]);
     	
     	if (!gasvOutfile.exists() || !gasvOutfile.isFile())
     	{
@@ -31,12 +34,14 @@ public class SplitReadMain
     	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[4]);
     	Constants.MIN_MAPQ = Integer.parseInt(args[5]);
     	
+    	if (!args[7].equals("default")) Constants.CHR_PREFIX = args[7];
+    	
     	SplitReadWorker srw = null;
     	int exitCode = 0;
 		try
 		{
 			// do all processing
-			srw = new SplitReadWorker(bamfile, gasvOutfile);
+			srw = new SplitReadWorker(bamfile, gasvOutfile, unmappedfile);
 	    	srw.processGASVOut();
 		}
 		catch (SplitReadException e)

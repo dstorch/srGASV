@@ -1,44 +1,23 @@
-package splitread;
-
-import java.lang.Math;
+package splitread.align;
 
 import net.sf.samtools.SAMRecord;
+import splitread.Constants;
+import splitread.GASVRegion;
 
-public class Aligner
+public class DeletionAligner extends Aligner
 {
-	private SAMRecord m_samRecord;
-	private GASVRegion m_gasvRegion;
 
-	private int[][] m_tableA;
-	private int[][] m_tableB;
-	private char[] m_read;
-	private char[] m_region1;
-	private char[] m_region2;
-	private int[] m_tableMins;
-	private int[] m_minLocations;
-
-	private Alignment.AlignmentBuilder m_builder;
-
-	public Aligner(SAMRecord record, GASVRegion region)
+	public DeletionAligner(SAMRecord record, GASVRegion region)
 	{
-		m_samRecord = record;
-		m_gasvRegion = region;
-
-		m_read = SplitReadWorker.toCharArray(record.getReadBases());
-		m_region1 = region.getFragX();
-		m_region2 = region.getFragY();
-
-		m_tableA = new int[m_read.length + 1][m_region1.length + 1];
-		m_tableB = new int[m_read.length + 1][m_region2.length + 1];
-
-		m_tableMins = new int[m_read.length + 1];
-		m_minLocations = new int[m_read.length + 1];
-
-		m_builder = Alignment.createBuilder();
-		
-		m_builder.setGASVRegion(m_gasvRegion).setSAMRecord(m_samRecord);
+		super(record, region);
+	}
+	
+	public DeletionAligner(char[] read, char[] fragment1, char[] fragment2, GASVRegion dummy)
+	{
+		super(read, fragment1, fragment2, dummy);
 	}
 
+	@Override
 	public Alignment align()
 	{
 		fillTableA();
@@ -200,5 +179,4 @@ public class Aligner
 
 		return m_builder.build();
 	}
-
 }

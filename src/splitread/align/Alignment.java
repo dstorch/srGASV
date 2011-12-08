@@ -1,5 +1,6 @@
-package splitread;
+package splitread.align;
 
+import splitread.GASVRegion;
 import net.sf.samtools.SAMRecord;
 
 public class Alignment
@@ -155,6 +156,12 @@ public class Alignment
 		System.out.println("GASV regions: " + m_gasvRegion);
 		System.out.println("breakpoints: " + m_chr1 + ":" + m_bp1 + ", " + m_chr2 + ":" + m_bp2);
 		System.out.println("alignment score: " + m_score);
+		System.out.println(m_referenceAlignment);
+		System.out.println(m_readAlignment);
+	}
+	
+	public void printSimple()
+	{
 		System.out.println(m_referenceAlignment);
 		System.out.println(m_readAlignment);
 	}

@@ -1,10 +1,14 @@
-package splitread;
+package splitread.io;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
+import splitread.GASVRegion;
+import splitread.SplitReadException;
+import splitread.SplitReadWorker;
 
 public class GASVRegionReader
 {
@@ -24,7 +28,7 @@ public class GASVRegionReader
 		}
 	}
 	
-	public void read(SplitReadWorker srw) throws IOException
+	public void read(SplitReadWorker srw) throws IOException, SplitReadException
 	{	
 		String line;
 		while ((line = m_reader.readLine()) != null)

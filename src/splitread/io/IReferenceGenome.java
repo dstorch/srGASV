@@ -1,7 +1,9 @@
-package splitread;
+package splitread.io;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import splitread.Point;
 
 public interface IReferenceGenome
 {
