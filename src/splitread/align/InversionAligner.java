@@ -15,8 +15,8 @@ public class InversionAligner extends Aligner
 		super(record, region);
 		
 		m_left = left;
-		if (m_left) m_region2 = Utils.complement(m_region2);
-		else m_region1 = Utils.complement(m_region1);
+		if (m_left) m_region2 = Utils.reverseComplement(m_region2);
+		else m_region1 = Utils.reverseComplement(m_region1);
 	}
 	
 	public InversionAligner(char[] read, char[] fragment1, char[] fragment2, GASVRegion dummy, boolean left)
@@ -24,32 +24,14 @@ public class InversionAligner extends Aligner
 		super(read, fragment1, fragment2, dummy);
 		
 		m_left = left;
-		if (m_left) m_region2 = Utils.complement(m_region2);
-		else m_region1 = Utils.complement(m_region1);
+		if (m_left) m_region2 = Utils.reverseComplement(m_region2);
+		else m_region1 = Utils.reverseComplement(m_region1);
 	}
 
 	@Override
 	public Alignment align()
 	{
-		fillTableA();
-		
-		for (int i = 0; i < m_read.length; i++)
-		{
-			for (int j = 0; j < m_region1.length; j++)
-			{
-				System.out.print(m_tableA[i][j] + " ");
-			}
-			
-			System.out.print("\n");
-		}
-		System.out.print("\n\n");
-		
-		for (int i = 0; i < m_read.length; i++)
-		{
-			System.out.print("(" + m_tableMins[i] + "," + m_minLocations[i] + ")  ");
-		}
-		System.out.print("\n");
-		
+		fillTableA();	
 		fillTableB();
 		return traceback();
 	}
@@ -128,7 +110,7 @@ public class InversionAligner extends Aligner
 		m_builder.setScore(minVal);
 
 		// put mismatches on the end of alignment strings
-		for (int counter = m_region2.length - 1; counter > minVal; counter--)
+		for (int counter = m_region2.length - 1; counter >= minPos; counter--)
 		{
 			m_builder.appendRead('-');
 			m_builder.appendReference(m_region2[counter]);
@@ -164,17 +146,28 @@ public class InversionAligner extends Aligner
 					m_builder.appendRead(m_read[curI-1]);
 					m_builder.appendReference(m_region2[curJ-1]);
 
-					if (m_left) m_builder.setBP2(m_gasvRegion.getRegionY().v - (curJ - 1), m_gasvRegion.getRightChromosome());
-					else m_builder.setBP2(m_gasvRegion.getRegionY().v - (curJ - 1), m_gasvRegion.getRightChromosome());
+					m_builder.setBP2(m_gasvRegion.getRegionY().v - (curJ - 1), m_gasvRegion.getRightChromosome());
 
+					for (int counter = curJ - 2; counter >= 0; counter--)
+					{
+						m_builder.appendRead('-');
+						m_builder.appendReference(m_region2[counter]);
+					}
+					
 					curJ = m_minLocations[curI-1];
 					curI--;
-
-					m_builder.setBP1(m_gasvRegion.getRegionX().u + (curJ - 1), m_gasvRegion.getLeftChromosome());
-
+					
 					// notate the break in the output
 					m_builder.appendRead('|');
 					m_builder.appendReference('|');
+					
+					for (int counter = m_region1.length - 1; counter > curJ; counter--)
+					{
+						m_builder.appendRead('-');
+						m_builder.appendReference(m_region1[counter]);
+					}
+
+					m_builder.setBP1(m_gasvRegion.getRegionX().u + (curJ - 1), m_gasvRegion.getLeftChromosome());
 				}
 			}
 			else
@@ -206,7 +199,30 @@ public class InversionAligner extends Aligner
 			m_builder.appendRead('-');
 			m_builder.appendReference(m_region1[counter]);
 		}
+		
+		fixAlignmentString();
 
 		return m_builder.build();
+	}
+	
+	private void fixAlignmentString()
+	{
+		String readAlignment = m_builder.getReadAlignment();
+		String fixed = fixOneString(readAlignment);
+		m_builder.setReadAlignment(fixed);
+		
+		String refAlignment = m_builder.getReferenceAlignment();
+		fixed = fixOneString(refAlignment);
+		m_builder.setReferenceAlignment(fixed);
+	}
+	
+	private String fixOneString(String alignmentStr)
+	{
+		int index = alignmentStr.lastIndexOf("|") + 1;
+		String reversePart = alignmentStr.substring(index);
+		String forwardPart = alignmentStr.substring(0, index);
+		
+		String reversed = String.valueOf(Utils.reverseComplement(reversePart.toCharArray()));
+		return forwardPart + reversed;
 	}
 }

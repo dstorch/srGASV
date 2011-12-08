@@ -99,7 +99,7 @@ public class DeletionAligner extends Aligner
 		m_builder.setScore(minVal);
 
 		// put mismatches on the end of alignment strings
-		for (int counter = m_region2.length - 1; counter > minVal; counter--)
+		for (int counter = m_region2.length - 1; counter >= minPos; counter--)
 		{
 			m_builder.appendRead('-');
 			m_builder.appendReference(m_region2[counter]);

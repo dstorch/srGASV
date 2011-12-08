@@ -17,8 +17,7 @@ public class Utils
         else if (letter == 'c' || letter == 'C') return 'g';
         else if (letter == 'g' || letter == 'G') return 'c';
         else if (letter == 't' || letter == 'T') return 'a';
-        else if (letter == 'n' || letter == 'N') return 'N';
-        else throw new IllegalArgumentException("non-DNA letter: " + letter);
+        else return letter;
     }
     
     public static char[] complement(char[] letters)

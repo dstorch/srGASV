@@ -50,6 +50,12 @@ public class GASVRegion
 			if (c2 < m_regionY.u) m_regionY.u = c2;
 			if (c2 > m_regionY.v) m_regionY.v = c2;
 		}
+		
+		// boost window size by a constant
+		m_regionX.u -= Constants.DELTA_WINDOW;
+		m_regionX.v += Constants.DELTA_WINDOW;
+		m_regionY.u -= Constants.DELTA_WINDOW;
+		m_regionY.v += Constants.DELTA_WINDOW;
 
 		IReferenceGenome genome = IReferenceGenome.GenomeFactory.getInstance();
 		m_fragX = genome.getFragment(m_leftChromosome, m_regionX);

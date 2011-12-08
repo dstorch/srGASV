@@ -3,6 +3,7 @@ package splitread.io;
 import java.io.IOException;
 import java.io.InputStream;
 
+import splitread.Constants;
 import splitread.Point;
 import splitread.Utils;
 
@@ -17,7 +18,7 @@ public class FastaReader implements IReferenceGenome
 		String chrstring = "chr" + Integer.toString(chromosome);
 		String regstr = chrstring + ":" + point.u + "-" + point.v;
 		
-		String command = "samtools faidx " + m_fastaName + " " + regstr;
+		String command = Constants.SAMTOOLS + " faidx " + m_fastaName + " " + regstr;
 		Process child = Runtime.getRuntime().exec(command);
 		
 		InputStream instream = child.getInputStream();

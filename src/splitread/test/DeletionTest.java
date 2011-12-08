@@ -33,11 +33,20 @@ public class DeletionTest
 	public static void main(String[] args) throws IOException
 	{
 
+		char[] r1 = "gaccattgacaggacttatt".toCharArray();
+		char[] r2 = "taccacccctaatcgaacga".toCharArray();
+		char[] rd = "ttgctaatc".toCharArray();
+		
+		GASVRegion dummy = GASVRegion.getDummy();
+		
+		Aligner aligner = new DeletionAligner(rd, r1, r2, dummy);
+		Alignment alignment = aligner.align();
+		alignment.printSimple();
+		System.out.println("\n");
+		
 		String region1 = "gacgaaaaagagactaaacgctatctgatttgggataaagaaaaaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtcacggaacgaaactgtaagtcggac";
 		String region2 = "CACCACATGAGAGAAACCTCTGGCCAAGAGTTAAGGAAGGCCATTCTCCTGGCAGCTTCTGTGAACCAGCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGCT";
 		String trueseq = "gacgaaaaagagactaaacgctatctgatttgggataaagaaaaaggagcattaacctTGCCCCTTTACCAATAGCCTGAGAGTCATGCGCT";
-
-		GASVRegion dummy = GASVRegion.getDummy();
 
 		Random r = new Random();
 
@@ -56,8 +65,8 @@ public class DeletionTest
 				readChars[rindex] = randomLetter(r);
 			}
 
-			Aligner aligner = new DeletionAligner(readChars, region1.toCharArray(), region2.toCharArray(), dummy);
-			Alignment alignment = aligner.align();
+			aligner = new DeletionAligner(readChars, region1.toCharArray(), region2.toCharArray(), dummy);
+			alignment = aligner.align();
 			alignment.printSimple();
 			System.out.println("\n");
 		}

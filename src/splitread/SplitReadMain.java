@@ -33,6 +33,7 @@ public class SplitReadMain
     	Constants.FRAG_LENGTH_MIN = Integer.parseInt(args[3]);
     	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[4]);
     	Constants.MIN_MAPQ = Integer.parseInt(args[5]);
+    	Constants.DELTA_WINDOW = Integer.parseInt(args[8]);
     	
     	if (!args[7].equals("default")) Constants.CHR_PREFIX = args[7];
     	

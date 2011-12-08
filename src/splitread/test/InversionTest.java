@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import splitread.GASVRegion;
-import splitread.Utils;
 import splitread.align.Aligner;
 import splitread.align.Alignment;
 import splitread.align.InversionAligner;
@@ -36,12 +35,12 @@ public class InversionTest
 		//String region1 = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagt|||cacggaacgaaactgtaagtcggac";
 		//String region2 = "ATTCTCCTGGCAGCTTCTGTGAACCAG|||CCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC";
 		
-		//String sampleseq = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagt|||ctggttcacagaagctgccaggagaat agggtgtttgacctgaaactgagagcataagg|||gtccgacttacatttcgttccgtg|||CCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC"
+		//String sampleseq = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagt|||ctggttcacagaagctgccaggagaat|||agggtgtttgacctgaaactgagagcataagg|||gtccgacttacatttcgttccgtg|||CCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC"
 		
-		/*String region1 = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtcacggaacgaaactgtaagtcggac";
+		String region1 = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtcacggaacgaaactgtaagtcggac";
 		String region2 = "ATTCTCCTGGCAGCTTCTGTGAACCAGCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC";
 	
-		String sampleseq = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtctggttcacagaagctgccaggagaatagggtgtttgacctgaaactgagagcataagg gtccgacttacatttcgttccgtgCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC";
+		String sampleseq = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtctggttcacagaagctgccaggagaatagggtgtttgacctgaaactgagagcataagggtccgacttacatttcgttccgtgCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC";
 	
 		GASVRegion dummy = GASVRegion.getDummy();
 
@@ -62,14 +61,14 @@ public class InversionTest
 				readChars[rindex] = randomLetter(r);
 			}
 
-			Aligner aligner = new InversionAligner(readChars, region1.toCharArray(), region2.toCharArray(), dummy);
+			Aligner aligner = new InversionAligner(readChars, region1.toCharArray(), region2.toCharArray(), dummy, true);
 			Alignment alignment = aligner.align();
 			alignment.printSimple();
 			System.out.println("\n");
-		}*/
+		}
 		
-		char[] region1 = "ctccaggcctc".toCharArray();
-		char[] region2 = "attattggaat".toCharArray();
+		/*char[] region1 = "ctccaggcctc".toCharArray();
+		char[] region2 = "attattggggg".toCharArray();
 		char[] read = "cagataa".toCharArray();
 		
 		System.out.println(Utils.reverseComplement(region2));
@@ -79,6 +78,11 @@ public class InversionTest
 		Aligner aligner = new InversionAligner(read, region1, region2, dummy, true);
 		Alignment alignment = aligner.align();
 		alignment.printSimple();
+		
+		char[] read2 = "aggcttg".toCharArray();
+		aligner = new InversionAligner(read2, region1, region2, dummy, false);
+		alignment = aligner.align();
+		alignment.printSimple();*/
 	}
 	
 }

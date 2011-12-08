@@ -6,8 +6,10 @@ public class Constants
 	public static int FRAG_LENGTH_MIN = 100;
 	public static int FRAG_LENGTH_MAX = 1000;
 	public static int MIN_MAPQ = 35;
+	public static int DELTA_WINDOW = 100;
 	
 	public static String CHR_PREFIX = "";
+	public static String SAMTOOLS = "lib/samtools";
 	
 	// GASV outfile column numbers
 	public static final int COL_CLUST_NAME = 0;

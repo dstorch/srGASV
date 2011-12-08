@@ -146,6 +146,26 @@ public class Alignment
 		{
 			return new Alignment(this);
 		}
+		
+		public void setReadAlignment(String readAlignment)
+		{
+			this.readAlignment = readAlignment;
+		}
+		
+		public void setReferenceAlignment(String referenceAlignment)
+		{
+			this.referenceAlignment = referenceAlignment;
+		}
+		
+		public String getReadAlignment()
+		{
+			return this.readAlignment;
+		}
+		
+		public String getReferenceAlignment()
+		{
+			return this.referenceAlignment;
+		}
 
 	}
 
