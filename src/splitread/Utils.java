@@ -1,5 +1,11 @@
 package splitread;
 
+/**
+ * Static utility methods.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class Utils
 {
     public static boolean isDNALetter(char letter)
@@ -10,6 +16,17 @@ public class Utils
     			letter == 't' || letter == 'T' ||
     			letter == 'n' || letter == 'N');
     }
+    
+	public static char[] toCharArray(byte[] bytes)
+	{
+		char[] chars = new char[bytes.length];
+		for (int i = 0; i < bytes.length; i++)
+		{
+			chars[i] = (char) bytes[i];
+		}
+		
+		return chars;
+	}
     
     public static char complementBase(char letter)
     {

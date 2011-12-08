@@ -1,5 +1,12 @@
 package splitread;
 
+/**
+ * Simple struct class which represents a point
+ * in genome by genome space.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class Point
 {
 	public int u;

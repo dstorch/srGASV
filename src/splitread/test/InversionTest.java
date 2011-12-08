@@ -3,7 +3,7 @@ package splitread.test;
 import java.io.IOException;
 import java.util.Random;
 
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 import splitread.align.Aligner;
 import splitread.align.Alignment;
 import splitread.align.InversionAligner;
@@ -42,7 +42,7 @@ public class InversionTest
 	
 		String sampleseq = "aaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtctggttcacagaagctgccaggagaatagggtgtttgacctgaaactgagagcataagggtccgacttacatttcgttccgtgCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGC";
 	
-		GASVRegion dummy = GASVRegion.getDummy();
+		GASVCluster dummy = GASVCluster.getDummy();
 
 		Random r = new Random();
 

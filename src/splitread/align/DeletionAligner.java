@@ -2,17 +2,24 @@ package splitread.align;
 
 import net.sf.samtools.SAMRecord;
 import splitread.Constants;
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 
+/**
+ * Implements split read alignment for
+ * deletions.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class DeletionAligner extends Aligner
 {
 
-	public DeletionAligner(SAMRecord record, GASVRegion region)
+	public DeletionAligner(SAMRecord record, GASVCluster region)
 	{
 		super(record, region);
 	}
 	
-	public DeletionAligner(char[] read, char[] fragment1, char[] fragment2, GASVRegion dummy)
+	public DeletionAligner(char[] read, char[] fragment1, char[] fragment2, GASVCluster dummy)
 	{
 		super(read, fragment1, fragment2, dummy);
 	}

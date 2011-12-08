@@ -6,16 +6,26 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 import splitread.SplitReadException;
 import splitread.SplitReadWorker;
 
-public class GASVRegionReader
+/**
+ * Reader for the input file which contains
+ * GASV clusters. Each line is used to
+ * construct a GASVCluster, and each resulting
+ * cluster is passed back to the SplitReadWorker
+ * to be processed.
+ * 
+ * @author dstorch
+ * @since December 2011
+ */
+public class GASVClusterReader
 {
 	
 	private BufferedReader m_reader;
 	
-	public GASVRegionReader(File infile)
+	public GASVClusterReader(File infile)
 	{
 		try
 		{
@@ -33,7 +43,7 @@ public class GASVRegionReader
 		String line;
 		while ((line = m_reader.readLine()) != null)
 		{
-			GASVRegion region = new GASVRegion(line.split("\t"));
+			GASVCluster region = new GASVCluster(line.split("\t"));
 			srw.processOneRegion(region);
 		}
 	}

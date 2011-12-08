@@ -3,7 +3,7 @@ package splitread.test;
 import java.io.IOException;
 import java.util.Random;
 
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 import splitread.align.Aligner;
 import splitread.align.Alignment;
 import splitread.align.DeletionAligner;
@@ -33,18 +33,57 @@ public class DeletionTest
 	public static void main(String[] args) throws IOException
 	{
 
-		char[] r1 = "gaccattgacaggacttatt".toCharArray();
-		char[] r2 = "taccacccctaatcgaacga".toCharArray();
-		char[] rd = "ttgctaatc".toCharArray();
+		char[] r1 = "agtgatgcaataaacatggaagtgtagatatctcttcaagatcctgattcaggccaggcgcggtggctcacgcctgtaatcccagcactttgggaggccga".toCharArray();
+		char[] r2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaagatcctgattcaatttcctttggatatatgcccagtagtgggatggctggatcatatggtag".toUpperCase().toCharArray();
+		char[] rd = "tattgtgaagagtgatgcaataaacatggaagtgtag".toCharArray();
 		
-		GASVRegion dummy = GASVRegion.getDummy();
+		char[][] allreads = {"tattgtgaagagtgatgcaataaacatggaagtgtag".toCharArray(),
+					"gctattgtgaagagtgatgcaataaacatggaagtgt".toCharArray(),
+					"gtgatgcaataaacatggaagtgtagatatctcttca".toCharArray(),
+					"caataaacatggaagtgtagatatctcttcaagatcc".toCharArray(),
+					"aacatggaagtgtagatatctcttcaagatcctgatt".toCharArray(),
+					"acatggaagtgtagatatctcttcaagatcctgattc".toCharArray(),
+					"ttgtgaagagtgatgcaataaacatggaagtgtagat".toCharArray(),
+					"aataaacatggaagtgtagatatctcttcaagatcct".toCharArray(),
+					"aagagtgatgcaataaacatggaagtgtagatatctc".toCharArray(),
+					"catggaagtgtagatatctcttcaagatcctgattca".toCharArray(),
+					"atgcaataaacatggaagtgtagatatctcttcaaga".toCharArray(),
+					"ataaacatggaagtgtagatatctcttcaagatcctg".toCharArray(),
+					"agagtgatgcaataaacatggaagtgtagatatctct".toCharArray(),
+					"gctattgtgaagagtgatgcaataaacatggaagtgt".toCharArray(),
+					"tgaagagtgatgcaataaacatggaagtgtagatatc".toCharArray(),
+					"tgatgcaataaacatggaagtgtagatatctcttcaa".toCharArray(),
+					"gagtgatgcaataaacatggaagtgtagatatctctt".toCharArray(),
+					"attgtgaagagtgatgcaataaacatggaagtgtaga".toCharArray(),
+					"gatgcaataaacatggaagtgtagatatctcttcaag".toCharArray(),
+					"taaacatggaagtgtagatatctcttcaagatcctga".toCharArray(),
+					"aagagtgatgcaataaacatggaagtgtagatatctc".toCharArray(),
+					"agtgatgcaataaacatggaagtgtagatatctcttc".toCharArray(),
+					"acatggaagtgtagatatctcttcaagatcctgattc".toCharArray(),
+					"gatgcaataaacatggaagtgtagatatctcttcaag".toCharArray(),
+					"gtgaagagtgatgcaataaacatggaagtgtagatat".toCharArray(),
+					"gcaataaacatggaagtgtagatatctcttcaagatc".toCharArray(),
+					"tgatgcaataaacatggaagtgtagatatctcttcaa".toCharArray(),
+					"acatggaagtgtagatatctcttcaagatcctgattc".toCharArray(),
+					"acatggaagtgtagatatctcttcaagatcctgattc".toCharArray(),
+					"agtgatgcaataaacatggaagtgtagatatctcttc".toCharArray(),
+					"acatggaagtgtagatatctcttcaagatcctgattc".toCharArray(),
+					"gatgcaataaacatggaagtgtagatatctcttcaag".toCharArray(),
+					"ataaacatggaagtgtagatatctcttcaagatcctg".toCharArray()};
 		
-		Aligner aligner = new DeletionAligner(rd, r1, r2, dummy);
-		Alignment alignment = aligner.align();
-		alignment.printSimple();
-		System.out.println("\n");
+		for (int i = 0; i < allreads.length; i++)
+		{
+			char[] read = allreads[i];
+			
+			GASVCluster dummy = GASVCluster.getDummy();
+			
+			Aligner aligner = new DeletionAligner(read, r1, r2, dummy);
+			Alignment alignment = aligner.align();
+			alignment.printSimple();
+			System.out.println("\n");
+		}
 		
-		String region1 = "gacgaaaaagagactaaacgctatctgatttgggataaagaaaaaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtcacggaacgaaactgtaagtcggac";
+		/*String region1 = "gacgaaaaagagactaaacgctatctgatttgggataaagaaaaaggagcattaaccttgactatgcctttagctccagccacctttttaagagtaaattgctgggcaggtgggggagggctagtcacggaacgaaactgtaagtcggac";
 		String region2 = "CACCACATGAGAGAAACCTCTGGCCAAGAGTTAAGGAAGGCCATTCTCCTGGCAGCTTCTGTGAACCAGCCTGGGTGCCAGCTAGCCTGACAGCCTCCTGTCTTGATTACTCTCCCTGCCCCTTTACCAATAGCCTGAGAGTCATGCGCT";
 		String trueseq = "gacgaaaaagagactaaacgctatctgatttgggataaagaaaaaggagcattaacctTGCCCCTTTACCAATAGCCTGAGAGTCATGCGCT";
 
@@ -69,7 +108,7 @@ public class DeletionTest
 			alignment = aligner.align();
 			alignment.printSimple();
 			System.out.println("\n");
-		}
+		}*/
 	}
 
 }

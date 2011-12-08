@@ -12,6 +12,7 @@
 #   1. Usage
 #   2. Building
 #   3. Parameters
+#   4. Dependencies
 #
 ##################################################
 
@@ -56,6 +57,9 @@ code must be compiled using the Apache Ant build tool.
 If Ant is installed, then type "ant" when working
 in the srGASV root directory.
 
+See the dependencies section for third party
+software required for srGASV.
+
 ##################################################
 3. Parameters
 ##################################################
@@ -96,4 +100,17 @@ CHR_PREFIX - naming convention for chromosomes
   parameter to "default". If the convention is
   "chr17", then set this parameter to "chr".
 
+##################################################
+4. Dependencies
+##################################################
 
+Samtools
+  srGASV expects to find samtools in lib/samtools.
+  Please provide a sym link in this directory to
+  your build of samtools.
+
+Picard
+  The ant build expects to find lib/sam-1.56.jar.
+  The jar file should be checked out with the
+  rest of the source code.
+ 

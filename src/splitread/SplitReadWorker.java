@@ -8,20 +8,28 @@ import java.util.Set;
 import splitread.align.Aligner;
 import splitread.align.Alignment;
 import splitread.io.BAMReader;
-import splitread.io.GASVRegionReader;
+import splitread.io.GASVClusterReader;
 
 import net.sf.samtools.SAMRecord;
 
+/**
+ * Includes high-level functions for looping through
+ * the input files.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class SplitReadWorker
 {
+	// readers for input files
 	private BAMReader m_bamreader;
 	private BAMReader m_unmappedBamreader = null;
-	private GASVRegionReader m_grr;
+	private GASVClusterReader m_grr;
 	
 	public SplitReadWorker(File bamfile, File gasvOutfile, File unmappedFile) throws SplitReadException
 	{
 		m_bamreader = new BAMReader(bamfile);
-		m_grr = new GASVRegionReader(gasvOutfile);
+		m_grr = new GASVClusterReader(gasvOutfile);
 		
 		if (unmappedFile.exists() && unmappedFile.isFile())
 		{
@@ -35,18 +43,16 @@ public class SplitReadWorker
 		System.exit(1);
 	}
 	
-	public static char[] toCharArray(byte[] bytes)
-	{
-		char[] chars = new char[bytes.length];
-		for (int i = 0; i < bytes.length; i++)
-		{
-			chars[i] = (char) bytes[i];
-		}
-		
-		return chars;
-	}
-	
-	public void oneSideSplitreads(GASVRegion region, boolean left) throws SplitReadException
+	/**
+	 * Process candidate split reads from one side of the SV event
+	 * 
+	 * @param region - represents the "bounding box" of a GASV cluster
+	 * @param left - if true, then get candidates from the left, otherwise
+	 *    get candidates from the right
+	 * 
+	 * @throws SplitReadException
+	 */
+	private void oneSideSplitreads(GASVCluster region, boolean left) throws SplitReadException
 	{
 		Point location;
 		if (left) location = region.getRegionX();
@@ -75,7 +81,7 @@ public class SplitReadWorker
     	}
 	}
 	
-	public void processOneRegion(GASVRegion region) throws SplitReadException
+	public void processOneRegion(GASVCluster region) throws SplitReadException
 	{
 		// make sure that regions are correctly arranged
 		/*if (region.getRegionX().v >= region.getRegionY().u)
@@ -99,6 +105,14 @@ public class SplitReadWorker
 		System.out.print("\n\n\n=====================\n");
 	}
 	
+	/**!
+	 * Read the line for each GASV cluster, and align candidate
+	 * split reads for each.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws SplitReadException
+	 */
 	public void processGASVOut() throws IOException, InterruptedException, SplitReadException
 	{
 		m_grr.read(this);

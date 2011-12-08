@@ -7,9 +7,18 @@ import splitread.Constants;
 import splitread.Point;
 import splitread.Utils;
 
+/**
+ * Uses samtools faidx command to
+ * extract sequence from the reference genome.
+ * This is launched as a subprocess, and the result is read
+ * through the input stream of the subprocess.
+ * 
+ * @author dstorch
+ * @since December 2011
+ */
 public class FastaReader implements IReferenceGenome
 {	
-	
+	// the name of the fasta file containing the sequence
 	private String m_fastaName;
 	
 	@Override
@@ -34,7 +43,6 @@ public class FastaReader implements IReferenceGenome
 			}
 		}
 		
-		// TODO is this necessary?
 		child.destroy();
 		
 		return result.toCharArray();

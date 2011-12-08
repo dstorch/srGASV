@@ -2,15 +2,22 @@ package splitread.align;
 
 import net.sf.samtools.SAMRecord;
 import splitread.Constants;
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 import splitread.Utils;
 
+/**
+ * Implements split read alignment for
+ * inversions.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class InversionAligner extends Aligner
 {
 
 	private boolean m_left;
 	
-	public InversionAligner(SAMRecord record, GASVRegion region, boolean left)
+	public InversionAligner(SAMRecord record, GASVCluster region, boolean left)
 	{
 		super(record, region);
 		
@@ -19,7 +26,7 @@ public class InversionAligner extends Aligner
 		else m_region1 = Utils.reverseComplement(m_region1);
 	}
 	
-	public InversionAligner(char[] read, char[] fragment1, char[] fragment2, GASVRegion dummy, boolean left)
+	public InversionAligner(char[] read, char[] fragment1, char[] fragment2, GASVCluster dummy, boolean left)
 	{
 		super(read, fragment1, fragment2, dummy);
 		

@@ -7,23 +7,43 @@ import java.util.Set;
 
 import splitread.io.IReferenceGenome;
 
-public class GASVRegion
+/**
+ * An instance of GASVCluster represents a single
+ * GASV detection of a structural variant---the geometric
+ * intersection region for a cluster of reads. One such
+ * object is created for each line passed in the first
+ * input file.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
+public class GASVCluster
 {
+	// chromosome of left and right breakpoints
 	private int m_leftChromosome;
 	private int m_rightChromosome;
+	
+	// polygon coordinates and the genome regions
+	// which form the corresponding bounding box
 	private List<Point> m_coords;
 	private Point m_regionX;
 	private Point m_regionY;
 
+	// sequences of the two regions obtained
+	// from the reference genome
 	private char[] m_fragX;
 	private char[] m_fragY;
 	
+	// the name of the gasv cluster
 	private String m_clusterName;
+	
+	// the names of the reads which form the cluster
 	private Set<String> m_readNames;
 	
+	// the type of the structural variant
 	private SVType m_svType;
 	
-	public GASVRegion(String[] cols) throws IOException, SplitReadException
+	public GASVCluster(String[] cols) throws IOException, SplitReadException
 	{
 		m_leftChromosome = Integer.parseInt(cols[Constants.COL_LPOS].trim());
 		m_rightChromosome = Integer.parseInt(cols[Constants.COL_RPOS].trim());
@@ -57,6 +77,7 @@ public class GASVRegion
 		m_regionY.u -= Constants.DELTA_WINDOW;
 		m_regionY.v += Constants.DELTA_WINDOW;
 
+		// obtain sequences from the reference genome
 		IReferenceGenome genome = IReferenceGenome.GenomeFactory.getInstance();
 		m_fragX = genome.getFragment(m_leftChromosome, m_regionX);
 		m_fragY = genome.getFragment(m_rightChromosome, m_regionY);
@@ -64,7 +85,7 @@ public class GASVRegion
 		m_svType = Utils.svTypeFromString(cols[Constants.COL_SV_TYPE]);
 	}
 	
-	public GASVRegion(String[] dummyCols, boolean dummy)
+	public GASVCluster(String[] dummyCols, boolean dummy)
 	{
 		m_leftChromosome = Integer.parseInt(dummyCols[Constants.COL_LPOS].trim());
 		m_rightChromosome = Integer.parseInt(dummyCols[Constants.COL_RPOS].trim());
@@ -150,7 +171,7 @@ public class GASVRegion
 		return m_clusterName;
 	}
 	
-	public static GASVRegion getDummy() throws IOException
+	public static GASVCluster getDummy() throws IOException
 	{
 		String[] cols = new String[8];
 		cols[0] = "c622_-22.4248_-696.71";
@@ -158,7 +179,7 @@ public class GASVRegion
 		cols[6] = "1";
 		cols[7] = "34874107, 34884613, 34874008, 34884613, 34873958, 34884563, 34873958, 34884464";
 		
-		return new GASVRegion(cols, true);
+		return new GASVCluster(cols, true);
 	}
 	
 	public SVType getSVType()

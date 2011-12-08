@@ -1,12 +1,24 @@
 package splitread.align;
 
-import splitread.GASVRegion;
+import splitread.GASVCluster;
 import net.sf.samtools.SAMRecord;
 
+/**
+ * An Alignment object is produced as the
+ * output of each Aligner subclass's
+ * align() method.
+ * 
+ * The alignment object is immutable, and therefore
+ * must be constructed via the AlignmentBuilder
+ * inner class.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class Alignment
 {
 	private final SAMRecord m_samRecord;
-	private final GASVRegion m_gasvRegion;
+	private final GASVCluster m_gasvRegion;
 
 	private final int m_score;
 	private final int m_bp1;
@@ -29,15 +41,22 @@ public class Alignment
 		m_readAlignment = builder.getRead();
 	}
 
+	/**
+	 * @return an AlignmentBuilder to populate with
+	 * data during alignment
+	 */
 	public static AlignmentBuilder createBuilder()
 	{
 		return new AlignmentBuilder();
 	}
 
+	/**
+	 * Inner class for constructing alignment objects.
+	 */
 	public static class AlignmentBuilder
 	{
 		private SAMRecord samRecord;
-		private GASVRegion gasvRegion;
+		private GASVCluster gasvRegion;
 		
 		private int score;
 		private int bp1;
@@ -70,13 +89,13 @@ public class Alignment
 			return this.samRecord;
 		}
 		
-		public AlignmentBuilder setGASVRegion(GASVRegion region)
+		public AlignmentBuilder setGASVRegion(GASVCluster region)
 		{
 			this.gasvRegion = region;
 			return this;
 		}
 		
-		public GASVRegion getGASVRegion()
+		public GASVCluster getGASVRegion()
 		{
 			return this.gasvRegion;
 		}
@@ -182,6 +201,7 @@ public class Alignment
 	
 	public void printSimple()
 	{
+		System.out.println("alignent score: " + m_score);
 		System.out.println(m_referenceAlignment);
 		System.out.println(m_readAlignment);
 	}

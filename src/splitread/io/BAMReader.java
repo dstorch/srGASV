@@ -14,6 +14,13 @@ import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMRecord;
 import net.sf.samtools.SAMRecordIterator;
 
+/**
+ * Wrapper for Picard's SAMFileReader which allows
+ * candidate split reads to be obtained.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class BAMReader
 {
 	private SAMFileReader m_reader;

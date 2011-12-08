@@ -1,5 +1,11 @@
 package splitread;
 
+/**
+ * Global constants passed as input parameters and fixed constants.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class Constants
 {	
 	// defaults overridden by values passed from srGASV wrapper
@@ -18,7 +24,7 @@ public class Constants
 	public static final int COL_RPOS = 6;
 	public static final int COL_COORDS = 7;
 	
-    public static final int GAP = 2;
+    public static final int GAP = 1;
     private static final int[][] m_matchScores = 
       {{0, 1, 1, 1, 1},
        {1, 0, 1, 1, 1},

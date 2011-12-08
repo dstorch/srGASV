@@ -5,6 +5,13 @@ import java.io.IOException;
 
 import splitread.io.IReferenceGenome;
 
+/**
+ * Process command line arguments, and call
+ * the processGASVOut() method of SplitReadWorker
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class SplitReadMain
 {
     public static void main(String[] args)
