@@ -41,6 +41,8 @@ public class SplitReadMain
     	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[4]);
     	Constants.MIN_MAPQ = Integer.parseInt(args[5]);
     	Constants.DELTA_WINDOW = Integer.parseInt(args[8]);
+    	Constants.setOutputFormatFromString(args[9]);
+    	Constants.MAX_ALIGNMENT_DIST = Integer.parseInt(args[10]);
     	
     	if (!args[7].equals("default")) Constants.CHR_PREFIX = args[7];
     	

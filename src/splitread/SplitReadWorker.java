@@ -77,7 +77,19 @@ public class SplitReadWorker
     	{
     		Aligner aligner = Aligner.create(record, region, left);
     		Alignment alignment = aligner.align();
-        	alignment.print();
+    		
+    		// only print if the alignment distance is under the threshold
+    		if (alignment.getScore() > Constants.MAX_ALIGNMENT_DIST) return;
+    		
+    		switch(Constants.OUTPUT_FORMAT)
+    		{
+    		case TABULAR:
+    			alignment.printTabular();
+    			break;
+    		case VERBOSE:
+    			alignment.printVerbose();
+    			break;
+    		}
     	}
 	}
 	
@@ -90,19 +102,29 @@ public class SplitReadWorker
 			return;
 		}*/
 		
-		System.out.println(region);
-		System.out.println(region.getFragX());
-		System.out.println(region.getFragY());
-		
-		// TODO remove this
-		System.out.println("left region");
-		System.out.println((region.getRegionX().u - Constants.FRAG_LENGTH_MAX) + "-" + region.getRegionX().u);
+		if (Constants.OUTPUT_FORMAT == Constants.OutputFormat.VERBOSE)
+		{
+			Constants.OUTPUT_STREAM.println(region);
+			Constants.OUTPUT_STREAM.println(region.getFragX());
+			Constants.OUTPUT_STREAM.println(region.getFragY());
+			Constants.OUTPUT_STREAM.println("left region: " + (region.getRegionX().u - Constants.FRAG_LENGTH_MAX) + "-" + region.getRegionX().u);
+		}
+
+		// get reads on the left side
 		oneSideSplitreads(region, true);
-		// TODO remove this
-		System.out.println("right region");
-		System.out.println(region.getRegionY().v + "-" + (region.getRegionY().v + Constants.FRAG_LENGTH_MAX));
+		
+		if (Constants.OUTPUT_FORMAT == Constants.OutputFormat.VERBOSE)
+		{
+			Constants.OUTPUT_STREAM.println("right region: " + region.getRegionY().v + "-" + (region.getRegionY().v + Constants.FRAG_LENGTH_MAX));
+		}
+		
+		// get reads on the right side
 		oneSideSplitreads(region, false);
-		System.out.print("\n\n\n=====================\n");
+		
+		if (Constants.OUTPUT_FORMAT == Constants.OutputFormat.VERBOSE)
+		{
+			Constants.OUTPUT_STREAM.println("\n\n=====================\n");
+		}
 	}
 	
 	/**!
@@ -122,6 +144,7 @@ public class SplitReadWorker
 	{
 		try
 		{
+			Constants.OUTPUT_STREAM.close();
 			m_grr.close();
 			m_bamreader.close();
 			

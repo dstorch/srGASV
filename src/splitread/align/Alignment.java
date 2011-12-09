@@ -1,5 +1,6 @@
 package splitread.align;
 
+import splitread.Constants;
 import splitread.GASVCluster;
 import net.sf.samtools.SAMRecord;
 
@@ -27,6 +28,7 @@ public class Alignment
 	private final int m_chr2;
 	private final String m_referenceAlignment;
 	private final String m_readAlignment;
+	private final String m_readSplitSeq;
 
 	private Alignment(AlignmentBuilder builder)
 	{
@@ -39,6 +41,7 @@ public class Alignment
 		m_chr2 = builder.getChromosomeRight();
 		m_referenceAlignment = builder.getReference();
 		m_readAlignment = builder.getRead();
+		m_readSplitSeq = builder.getReadSplitSeq();
 	}
 
 	/**
@@ -65,11 +68,13 @@ public class Alignment
 		private int chromosome2;
 		private String referenceAlignment;
 		private String readAlignment;
+		private String readSplitSeq;
 
 		public AlignmentBuilder()
 		{
 			referenceAlignment = "";
 			readAlignment = "";
+			readSplitSeq = "";
 		}
 
 		public AlignmentBuilder setScore(int score)
@@ -123,6 +128,12 @@ public class Alignment
 		public AlignmentBuilder appendRead(char next)
 		{
 			this.readAlignment = next + this.readAlignment;
+			
+			if (next != '-')
+			{
+				this.readSplitSeq = next + this.readSplitSeq;
+			}
+			
 			return this;
 		}
 		
@@ -185,25 +196,37 @@ public class Alignment
 		{
 			return this.referenceAlignment;
 		}
+		
+		public String getReadSplitSeq()
+		{
+			return this.readSplitSeq;
+		}
 
 	}
 
-	public void print()
+	public void printTabular()
 	{
-		System.out.println("cluster name: " + m_gasvRegion.getClusterName());
-		System.out.println("read name: " + m_samRecord.getReadName());
-		System.out.println("GASV regions: " + m_gasvRegion);
-		System.out.println("breakpoints: " + m_chr1 + ":" + m_bp1 + ", " + m_chr2 + ":" + m_bp2);
-		System.out.println("alignment score: " + m_score);
-		System.out.println(m_referenceAlignment);
-		System.out.println(m_readAlignment);
+		Constants.OUTPUT_STREAM.printf("%s\t%s\t%s\t%d:%d, %d:%d\t%d\t%s\n", m_gasvRegion.getClusterName(),
+				  						m_samRecord.getReadName(), m_gasvRegion, m_chr1, m_bp1,
+										m_chr2, m_bp2, m_score, m_readSplitSeq);
+	}
+	
+	public void printVerbose()
+	{
+		Constants.OUTPUT_STREAM.println("cluster name: " + m_gasvRegion.getClusterName());
+		Constants.OUTPUT_STREAM.println("read name: " + m_samRecord.getReadName());
+		Constants.OUTPUT_STREAM.println("GASV regions: " + m_gasvRegion);
+		Constants.OUTPUT_STREAM.println("breakpoints: " + m_chr1 + ":" + m_bp1 + ", " + m_chr2 + ":" + m_bp2);
+		Constants.OUTPUT_STREAM.println("alignment score: " + m_score);
+		Constants.OUTPUT_STREAM.println(m_referenceAlignment);
+		Constants.OUTPUT_STREAM.println(m_readAlignment);
 	}
 	
 	public void printSimple()
 	{
-		System.out.println("alignent score: " + m_score);
-		System.out.println(m_referenceAlignment);
-		System.out.println(m_readAlignment);
+		Constants.OUTPUT_STREAM.println("alignent score: " + m_score);
+		Constants.OUTPUT_STREAM.println(m_referenceAlignment);
+		Constants.OUTPUT_STREAM.println(m_readAlignment);
 	}
 
 	public int getScore()

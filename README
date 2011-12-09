@@ -12,7 +12,8 @@
 #   1. Usage
 #   2. Building
 #   3. Parameters
-#   4. Dependencies
+#   4. Output format
+#   5. Dependencies
 #
 ##################################################
 
@@ -87,6 +88,9 @@ DELTA_WINDOW - increase in GASV prediction window size
   window [a - DELTA_WINDOW, b + DELTA_WINDOW]. Set to
   zero to use the GASV regions.
 
+MAX_ALIGNMENT_DIST - only output reads with alignment
+  distances lower than this threshold
+
 UNMAPPED_BAM - BAM file containing all unmapped reads
   If set to the string "default", then srGASV assumes
   that unmapped reads are in the same file as their
@@ -100,8 +104,37 @@ CHR_PREFIX - naming convention for chromosomes
   parameter to "default". If the convention is
   "chr17", then set this parameter to "chr".
 
+OUTPUT_FORMAT - set to either "verbose" or "tabular"
+  The tabular setting gives the output format described
+  in the section below. The verbose format gives more
+  information, but is not organized into a column-based
+  format.
+
 ##################################################
-4. Dependencies
+4. Output format
+##################################################
+
+The tabular output format consists of the following
+tab-delimited fields:
+
+1. GASV cluster name
+2. Read name extracted from the BAM file
+3. GASV regions for the cluster
+   The regions are in format <chr1>:a-b, <chr2>:x-y
+   That is, region 1 is the window [a, b] on <chr1>,
+   and region 2 is the window [x, y] on <chr2>.
+4. Breakpoints implied by the alignment
+   The format for this field is <chr1>:b1, <chr2>:b2.
+   The breakpoints b1 and b2 are on chromosomes <chr1>
+   and <chr2> respectively.
+5. Alignment score
+   The default scoring is a penalty of 1 for both mismatches
+   and gaps.
+6. Sequence of the split read
+   A pipe ("|") is used to denote the split.
+
+##################################################
+5. Dependencies
 ##################################################
 
 Samtools

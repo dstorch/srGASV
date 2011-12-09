@@ -1,13 +1,15 @@
 #!/usr/local/bin/bash
 
 #########################################
-# Set parameters
+# Set parameters here
 LMIN=100
 LMAX=400
 MIN_MAPQ=0
 DELTA_WINDOW=0
+MAX_ALIGNMENT_DIST=20
 UNMAPPED_BAM=data/venter/venterResorted_unmapped.bam
 CHR_PREFIX=chr
+OUTPUT_FORMAT=tabular
 #########################################
 
 #########################################
@@ -25,7 +27,7 @@ JARFILE=build/SplitReadGASV.jar
 
 COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE $FASTAFILE \
 		$LMIN $LMAX $MIN_MAPQ $UNMAPPED_BAM $CHR_PREFIX \
-		$DELTA_WINDOW"
+		$DELTA_WINDOW $OUTPUT_FORMAT $MAX_ALIGNMENT_DIST"
 
 if [ $ARGNUM != 3 ]; then
   echo "usage: srGASV <GASVoutfile> <reads.bam> <reference.fasta>"

@@ -1,5 +1,7 @@
 package splitread;
 
+import java.io.PrintStream;
+
 /**
  * Global constants passed as input parameters and fixed constants.
  * 
@@ -8,14 +10,41 @@ package splitread;
  */
 public class Constants
 {	
+	// output
+	public enum OutputFormat
+	{
+		TABULAR,
+		VERBOSE
+	}
+	public static OutputFormat OUTPUT_FORMAT = OutputFormat.VERBOSE;
+	public static PrintStream OUTPUT_STREAM = new PrintStream(System.out);
+	
 	// defaults overridden by values passed from srGASV wrapper
 	public static int FRAG_LENGTH_MIN = 100;
 	public static int FRAG_LENGTH_MAX = 1000;
 	public static int MIN_MAPQ = 35;
 	public static int DELTA_WINDOW = 100;
+	public static int MAX_ALIGNMENT_DIST = 30;
 	
 	public static String CHR_PREFIX = "";
 	public static String SAMTOOLS = "lib/samtools";
+
+	
+	public static void setOutputFormatFromString(String format)
+	{
+		if (format.equals("tabular"))
+		{
+			Constants.OUTPUT_FORMAT = OutputFormat.TABULAR;
+		}
+		else if (format.equals("verbose"))
+		{
+			Constants.OUTPUT_FORMAT = OutputFormat.VERBOSE;
+		}
+		else
+		{
+			throw new IllegalArgumentException("unrecognized output format specification");
+		}
+	}
 	
 	// GASV outfile column numbers
 	public static final int COL_CLUST_NAME = 0;
