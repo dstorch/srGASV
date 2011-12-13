@@ -67,25 +67,6 @@ public abstract class Aligner
 		m_builder.setGASVRegion(m_gasvRegion).setSAMRecord(m_samRecord);
 	
 	}
-	
-	// TODO dummy aligner for testing
-	public Aligner(char[] read, char[] fragment1, char[] fragment2, GASVCluster dummy)
-	{
-		m_read = read;
-		m_region1 = fragment1;
-		m_region2 = fragment2;
-		
-		m_gasvRegion = dummy;
-
-		m_tableA = new int[m_read.length + 1][m_region1.length + 1];
-		m_tableB = new int[m_read.length + 1][m_region2.length + 1];
-
-		m_tableMins = new int[m_read.length + 1];
-		m_minLocations = new int[m_read.length + 1];
-
-		m_builder = Alignment.createBuilder();
-		
-	}
 
 	public abstract Alignment align();
 

@@ -21,7 +21,7 @@
 1. Usage
 ##################################################
 
-srGASV <GASV.out> <reads.bam> <reference.fasta>
+srGASV <GASV.out> <mapped.bam> <unmapped.bam> <reference.fasta>
 
 There are three required arguments, as shown above.
 The first is a tab-delimited plaintext file with
@@ -37,12 +37,18 @@ the following columns:
 	8. Coordinates in Polygon:          34874107, 34884613, 34874008, 34884613, 34873958, 34884563, etc.
 
 The second input file is a BAM file containing
-the reads. srGASV will scan this file looking for
-candidate split reads. This file must be indexed,
+the well-mapped reads. srGASV will scan this file looking for
+the mates of candidate split reads. This file must be indexed,
 i.e. it must have a corresponding .bam.bai file
 in the same directory.
 
-The third input file is the reference sequence to
+The third input file is a BAM file containing all
+of the reads that are unmapped or of low mapping quality.
+Once the anchor reads have been identified from the
+file of mapped reads, srGASV will search this file
+for the mates that could be split reads.
+
+The final input file is the reference sequence to
 which the reads were aligned, in fasta format. The
 fasta files should first be indexed using "samtools faidx".
 srGASV will extract windows of sequence from this file,
@@ -91,24 +97,19 @@ DELTA_WINDOW - increase in GASV prediction window size
 MAX_ALIGNMENT_DIST - only output reads with alignment
   distances lower than this threshold
 
-UNMAPPED_BAM - BAM file containing all unmapped reads
-  If set to the string "default", then srGASV assumes
-  that unmapped reads are in the same file as their
-  mapped mates, and are given the same genome
-  coordindates as their mapped mate. Otherwise,
-  srGASV scans the file indicated by this parameter
-  in order to find unmapped mates.
-
 CHR_PREFIX - naming convention for chromosomes
   If chromosome 17 is named as "17", set this
   parameter to "default". If the convention is
   "chr17", then set this parameter to "chr".
 
-OUTPUT_FORMAT - set to either "verbose" or "tabular"
+OUTPUT_FORMAT - set to either "verbose", "tabular", or "concise"
   The tabular setting gives the output format described
   in the section below. The verbose format gives more
   information, but is not organized into a column-based
-  format.
+  format. The concise format outputs a single line per
+  cluster instead of a line per read. This line gives the
+  majority vote breakpoints for the cluster, as well as
+  the number of split reads supporting each breakpoint.
 
 ##################################################
 4. Output format

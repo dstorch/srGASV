@@ -21,6 +21,6 @@ public class Point
 	@Override
 	public String toString()
 	{
-		return "(" + u + "," + v + ")";
+		return u + "-" + v;
 	}
 }

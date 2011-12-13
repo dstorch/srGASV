@@ -25,15 +25,6 @@ public class InversionAligner extends Aligner
 		if (m_left) m_region2 = Utils.reverseComplement(m_region2);
 		else m_region1 = Utils.reverseComplement(m_region1);
 	}
-	
-	public InversionAligner(char[] read, char[] fragment1, char[] fragment2, GASVCluster dummy, boolean left)
-	{
-		super(read, fragment1, fragment2, dummy);
-		
-		m_left = left;
-		if (m_left) m_region2 = Utils.reverseComplement(m_region2);
-		else m_region1 = Utils.reverseComplement(m_region1);
-	}
 
 	@Override
 	public Alignment align()

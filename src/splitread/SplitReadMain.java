@@ -18,8 +18,8 @@ public class SplitReadMain
     {	
     	File gasvOutfile = new File(args[0]);
     	File bamfile = new File(args[1]);
-    	File fastafile = new File(args[2]);
-    	File unmappedfile = new File(args[6]);
+    	File unmappedfile = new File(args[2]);
+    	File fastafile = new File(args[3]);
     	
     	if (!gasvOutfile.exists() || !gasvOutfile.isFile())
     	{
@@ -33,17 +33,21 @@ public class SplitReadMain
     	{
     		throw new IllegalArgumentException("could not find fasta file: " + fastafile.getName());
     	}
+    	if (!bamfile.exists() || !bamfile.isFile())
+    	{
+    		throw new IllegalArgumentException("could not find BAM file: " + bamfile.getName());
+    	}
     	
     	// set the fasta file name
     	IReferenceGenome.GenomeFactory.getInstance().setFastaName(fastafile.getAbsolutePath());
     	
-    	Constants.FRAG_LENGTH_MIN = Integer.parseInt(args[3]);
-    	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[4]);
-    	Constants.MIN_MAPQ = Integer.parseInt(args[5]);
+    	Constants.FRAG_LENGTH_MIN = Integer.parseInt(args[4]);
+    	Constants.FRAG_LENGTH_MAX = Integer.parseInt(args[5]);
+    	Constants.MIN_MAPQ = Integer.parseInt(args[6]);
     	Constants.DELTA_WINDOW = Integer.parseInt(args[8]);
     	Constants.setOutputFormatFromString(args[9]);
     	Constants.MAX_ALIGNMENT_DIST = Integer.parseInt(args[10]);
-    	
+
     	if (!args[7].equals("default")) Constants.CHR_PREFIX = args[7];
     	
     	SplitReadWorker srw = null;

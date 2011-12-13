@@ -61,13 +61,13 @@ public class BAMReader
 			
 			if (hasMate)
 			{
-				boolean mateUnmapped = curRecord.getMateUnmappedFlag();
-				int mapq = curRecord.getMappingQuality();
+				// TODO account for mapping quality
+				//int mapq = curRecord.getMappingQuality();
 				
 				boolean oriented = curRecord.getReadNegativeStrandFlag();
 				if (left) oriented = !oriented;
 				
-				if (mateUnmapped && oriented && mapq >= Constants.MIN_MAPQ)
+				if (oriented /*&& mapq >= Constants.MIN_MAPQ*/)
 				{	
 					candidates.add(curRecord);
 				}
@@ -113,10 +113,13 @@ public class BAMReader
 		{
 			curRecord = it.next();
 			boolean unmapped = curRecord.getReadUnmappedFlag();
+			int mapq = curRecord.getMappingQuality();
+			boolean poorlyMapping = (unmapped || mapq < Constants.MIN_MAPQ);
+			
 			boolean isCandidate = nameset.contains(curRecord.getReadName());
 			boolean nonRedundant = !seqset.contains(curRecord.getReadString());
 			
-			if (unmapped && isCandidate && nonRedundant)
+			if (poorlyMapping && isCandidate && nonRedundant)
 			{
 				seqset.add(curRecord.getReadString());
 				candidates.add(curRecord);

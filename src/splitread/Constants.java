@@ -14,7 +14,8 @@ public class Constants
 	public enum OutputFormat
 	{
 		TABULAR,
-		VERBOSE
+		VERBOSE,
+		CONCISE
 	}
 	public static OutputFormat OUTPUT_FORMAT = OutputFormat.VERBOSE;
 	public static PrintStream OUTPUT_STREAM = new PrintStream(System.out);
@@ -28,7 +29,6 @@ public class Constants
 	
 	public static String CHR_PREFIX = "";
 	public static String SAMTOOLS = "lib/samtools";
-
 	
 	public static void setOutputFormatFromString(String format)
 	{
@@ -39,6 +39,10 @@ public class Constants
 		else if (format.equals("verbose"))
 		{
 			Constants.OUTPUT_FORMAT = OutputFormat.VERBOSE;
+		}
+		else if (format.equals("concise"))
+		{
+			Constants.OUTPUT_FORMAT = OutputFormat.CONCISE;
 		}
 		else
 		{

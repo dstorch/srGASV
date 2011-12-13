@@ -18,11 +18,6 @@ public class DeletionAligner extends Aligner
 	{
 		super(record, region);
 	}
-	
-	public DeletionAligner(char[] read, char[] fragment1, char[] fragment2, GASVCluster dummy)
-	{
-		super(read, fragment1, fragment2, dummy);
-	}
 
 	@Override
 	public Alignment align()
