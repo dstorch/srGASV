@@ -67,9 +67,6 @@ public class SplitReadWorker
 		
 		List<SAMRecord> splits = m_unmapped.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
 		
-		// TODO
-		System.out.println("done reading in the unmapped reads");
-		
     	for (SAMRecord record : splits)
     	{
     		Aligner aligner = Aligner.create(record, region, left);
