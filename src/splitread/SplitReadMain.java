@@ -47,6 +47,7 @@ public class SplitReadMain
     	Constants.DELTA_WINDOW = Integer.parseInt(args[8]);
     	Constants.setOutputFormatFromString(args[9]);
     	Constants.MAX_ALIGNMENT_DIST = Integer.parseInt(args[10]);
+    	Constants.MIN_PER_SIDE = Integer.parseInt(args[11]);
 
     	if (!args[7].equals("default")) Constants.CHR_PREFIX = args[7];
     	

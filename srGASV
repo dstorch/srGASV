@@ -6,9 +6,10 @@ LMIN=100
 LMAX=300
 MIN_MAPQ=45
 DELTA_WINDOW=0
-MAX_ALIGNMENT_DIST=3
+MAX_ALIGNMENT_DIST=8
+MIN_PER_SIDE=4
 CHR_PREFIX=chr
-OUTPUT_FORMAT=concise
+OUTPUT_FORMAT=tabular
 #########################################
 
 #########################################
@@ -25,9 +26,9 @@ UNMAPPED_BAM=$3
 FASTAFILE=$4
 JARFILE=build/SplitReadGASV.jar
 
-COMMAND="java -jar $JARFILE $GASVOUT $BAMFILE $UNMAPPED_BAM $FASTAFILE \
+COMMAND="java -Xmx2G -jar $JARFILE $GASVOUT $BAMFILE $UNMAPPED_BAM $FASTAFILE \
 		$LMIN $LMAX $MIN_MAPQ $CHR_PREFIX $DELTA_WINDOW $OUTPUT_FORMAT \
-		$MAX_ALIGNMENT_DIST"
+		$MAX_ALIGNMENT_DIST $MIN_PER_SIDE"
 
 if [ $ARGNUM != 4 ]; then
   echo "usage: srGASV <GASVclusters> <mapped.bam> <unmapped.bam> <reference.fasta>"

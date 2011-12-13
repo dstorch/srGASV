@@ -67,6 +67,9 @@ public class SplitReadWorker
 		
 		List<SAMRecord> splits = m_unmapped.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
 		
+		// TODO
+		System.out.println("done reading in the unmapped reads");
+		
     	for (SAMRecord record : splits)
     	{
     		Aligner aligner = Aligner.create(record, region, left);
@@ -77,6 +80,10 @@ public class SplitReadWorker
     		
     		// ignore if breakpoints are zeros
     		if (alignment.getBP1() == 0 || alignment.getBP2() == 0) continue;
+    		
+    		// skip reads whose alignment is not centered over the break
+    		if (alignment.getLeftChars() < Constants.MIN_PER_SIDE) continue;
+    		if (alignment.getRightChars() < Constants.MIN_PER_SIDE) continue;
     		
     		// keep track of bp1 votes
     		int bp1 = alignment.getBP1();

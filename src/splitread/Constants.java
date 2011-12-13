@@ -26,6 +26,7 @@ public class Constants
 	public static int MIN_MAPQ = 35;
 	public static int DELTA_WINDOW = 100;
 	public static int MAX_ALIGNMENT_DIST = 30;
+	public static int MIN_PER_SIDE = 4;
 	
 	public static String CHR_PREFIX = "";
 	public static String SAMTOOLS = "lib/samtools";

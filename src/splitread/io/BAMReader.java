@@ -1,9 +1,11 @@
 package splitread.io;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import splitread.Constants;
@@ -24,11 +26,17 @@ import net.sf.samtools.SAMRecordIterator;
 public class BAMReader
 {
 	private SAMFileReader m_reader;
+	
+	private boolean m_builtmap;
+	private Map<String, SAMRecord> m_reads;
 
 	public BAMReader(File bamfile)
 	{
 		m_reader = new SAMFileReader(bamfile);
 		m_reader.setValidationStringency(SAMFileReader.ValidationStringency.SILENT);
+		
+		m_builtmap = false;
+		m_reads = new HashMap<String, SAMRecord>();
 	}
 
 	// TODO make the criteria for picking candidates are sound
@@ -82,8 +90,55 @@ public class BAMReader
 
 	public List<SAMRecord> getSplitreadCandidates(Integer chromosome, Point region, boolean left, Set<SAMRecord> mates)
 	{
+		/*if (!m_builtmap)
+		{
+			SAMRecordIterator it = m_reader.iterator();
+
+			SAMRecord curRecord;
+			while (it.hasNext())
+			{
+				curRecord = it.next();
+				m_reads.put(curRecord.getReadName(), curRecord);
+			}
+			
+			it.close();
+			
+			m_builtmap = true;
+		}
+		
 		List<SAMRecord> candidates = new LinkedList<SAMRecord>();
-		boolean hasIndex = m_reader.hasIndex();
+		
+		Set<String> nameset = new HashSet<String>();
+		Set<String> seqset = new HashSet<String>();
+		for (SAMRecord record : mates)
+		{
+			nameset.add(record.getReadName());
+		}
+		
+		for (String mateName : nameset)
+		{
+			
+			if (m_reads.containsKey(mateName))
+			{
+				SAMRecord record = m_reads.get(mateName);
+				
+				boolean unmapped = record.getReadUnmappedFlag();
+				int mapq = record.getMappingQuality();
+				boolean poorlyMapping = (unmapped || mapq < Constants.MIN_MAPQ);
+				
+				boolean nonRedundant = !seqset.contains(record.getReadString());
+				
+				if (poorlyMapping && nonRedundant)
+				{
+					seqset.add(record.getReadString());
+					candidates.add(record);
+				}
+			}
+		}
+		
+		return candidates;*/
+		
+		List<SAMRecord> candidates = new LinkedList<SAMRecord>();
 		
 		Set<String> nameset = new HashSet<String>();
 		Set<String> seqset = new HashSet<String>();
@@ -92,21 +147,7 @@ public class BAMReader
 			nameset.add(record.getReadName());
 		}
 
-		SAMRecordIterator it;
-		if (left && hasIndex)
-		{
-			it = m_reader.query(Constants.CHR_PREFIX + chromosome.toString(), region.u - Constants.FRAG_LENGTH_MAX,
-								region.v - Constants.FRAG_LENGTH_MIN, false);
-		}
-		else if (hasIndex)
-		{
-			it = m_reader.query(Constants.CHR_PREFIX + chromosome.toString(), region.u + Constants.FRAG_LENGTH_MIN,
-								region.v + Constants.FRAG_LENGTH_MAX, false);
-		}
-		else
-		{
-			it = m_reader.iterator();
-		}
+		SAMRecordIterator it = m_reader.iterator();
 
 		SAMRecord curRecord;
 		while (it.hasNext())

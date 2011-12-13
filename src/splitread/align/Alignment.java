@@ -253,4 +253,23 @@ public class Alignment
 	{
 		return m_readAlignment;
 	}
+	
+	public String getReadSplitSeq()
+	{
+		return m_readSplitSeq;
+	}
+	
+	// number of characters left of the split
+	public int getLeftChars()
+	{
+		return m_readSplitSeq.indexOf("|");
+	}
+	
+	// number of characters right of the split
+	public int getRightChars()
+	{
+		int total = m_readSplitSeq.length() - 1;
+		int left = m_readSplitSeq.indexOf("|");
+		return total - left;
+	}
 }
