@@ -13,6 +13,7 @@
     <fileset dir="${lib}" >
       <include name="sam-1.56.jar"/>
 	  <include name="javagene.jar"/>
+	  <include name="sqlitejdbc-v056.jar"/>
     </fileset>
   </path>
 

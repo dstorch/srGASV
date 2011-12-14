@@ -1,6 +1,11 @@
 package splitread.io;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +13,7 @@ import java.util.Set;
 
 import splitread.Constants;
 import splitread.Point;
+import splitread.Read;
 import splitread.SplitReadException;
 
 import net.sf.samtools.SAMFileReader;
@@ -25,10 +31,38 @@ public class BAMReader
 {
 	private SAMFileReader m_reader;
 
+	// database connection
+	boolean m_hasDB;
+	private Connection m_connection = null;
+	private Statement m_statement = null;
+	private ResultSet m_resultSet = null;
+
 	public BAMReader(File bamfile)
 	{
 		m_reader = new SAMFileReader(bamfile);
 		m_reader.setValidationStringency(SAMFileReader.ValidationStringency.SILENT);
+
+		File dbfile = new File(bamfile.getAbsolutePath() + ".db");
+		m_hasDB = dbfile.exists() && dbfile.isFile();
+		if (m_hasDB)
+		{
+			try
+			{
+				Class.forName("org.sqlite.JDBC");
+				m_connection = DriverManager.getConnection("jdbc:sqlite:" + dbfile.getAbsolutePath());
+				m_statement = m_connection.createStatement();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+				m_hasDB = false;
+			}
+			catch (ClassNotFoundException e)
+			{
+				e.printStackTrace();
+				m_hasDB = false;
+			}
+		}
 	}
 
 	public Set<SAMRecord> getSplitreadMates(Integer chromosome, Point region, boolean left) throws SplitReadException
@@ -37,7 +71,7 @@ public class BAMReader
 		{
 			throw new SplitReadException("BAM file has no index");
 		}
-		
+
 		Set<SAMRecord> candidates = new HashSet<SAMRecord>();
 
 		SAMRecordIterator it;
@@ -57,15 +91,15 @@ public class BAMReader
 		{	
 			curRecord = it.next();
 			boolean hasMate = curRecord.getReadPairedFlag();
-			
+
 			if (hasMate)
 			{
 				// TODO account for mapping quality
 				//int mapq = curRecord.getMappingQuality();
-				
+
 				boolean oriented = curRecord.getReadNegativeStrandFlag();
 				if (left) oriented = !oriented;
-				
+
 				if (oriented /*&& mapq >= Constants.MIN_MAPQ*/)
 				{	
 					candidates.add(curRecord);
@@ -79,10 +113,15 @@ public class BAMReader
 		return candidates;
 	}
 
-	public List<SAMRecord> getSplitreadCandidates(Integer chromosome, Point region, boolean left, Set<SAMRecord> mates)
+	public List<Read> getSplitreadCandidates(Integer chromosome, Point region, boolean left, Set<SAMRecord> mates) throws ClassNotFoundException
 	{
-		List<SAMRecord> candidates = new LinkedList<SAMRecord>();
-		
+		if (m_hasDB)
+		{
+			return getReadsFromDB(mates);
+		}
+
+		List<Read> candidates = new LinkedList<Read>();
+
 		Set<String> nameset = new HashSet<String>();
 		Set<String> seqset = new HashSet<String>();
 		for (SAMRecord record : mates)
@@ -99,14 +138,16 @@ public class BAMReader
 			boolean unmapped = curRecord.getReadUnmappedFlag();
 			int mapq = curRecord.getMappingQuality();
 			boolean poorlyMapping = (unmapped || mapq < Constants.MIN_MAPQ);
-			
+
 			boolean isCandidate = nameset.contains(curRecord.getReadName());
 			boolean nonRedundant = !seqset.contains(curRecord.getReadString());
-			
+
 			if (poorlyMapping && isCandidate && nonRedundant)
 			{
 				seqset.add(curRecord.getReadString());
-				candidates.add(curRecord);
+
+				Read read = new Read(curRecord.getReadName(), curRecord.getReadString());
+				candidates.add(read);
 			}
 		}
 
@@ -115,10 +156,54 @@ public class BAMReader
 
 		return candidates;
 	}
-	
+
+	public List<Read> getReadsFromDB(Set<SAMRecord> mates) throws ClassNotFoundException
+	{
+		List<Read> candidates = new LinkedList<Read>();
+		Set<String> seqset = new HashSet<String>();
+
+		for (SAMRecord mate : mates)
+		{
+			String readName = mate.getReadName();
+			String sql = "select * from bamfile where name = '" + readName + "';";
+
+			try
+			{
+				m_resultSet = m_statement.executeQuery(sql);
+
+				while (m_resultSet.next())
+				{
+					String sequence = m_resultSet.getString("sequence");
+					boolean nonRedundant = !seqset.contains(sequence);
+
+					if (nonRedundant)
+					{
+						Read read = new Read(readName, sequence);
+						candidates.add(read);
+					}
+				}
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+				m_hasDB = false;
+			}
+		}
+
+		return candidates;
+	}
+
 	public void close()
 	{
 		m_reader.close();
+		
+		try
+		{
+			m_resultSet.close();
+			m_statement.close();
+			m_connection.close();
+		}
+		catch(Exception e) {}
 	}
 
 }

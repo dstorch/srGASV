@@ -38,7 +38,7 @@ public class GASVClusterReader
 		}
 	}
 	
-	public void read(SplitReadWorker srw) throws IOException, SplitReadException
+	public void read(SplitReadWorker srw) throws IOException, SplitReadException, ClassNotFoundException
 	{	
 		String line;
 		while ((line = m_reader.readLine()) != null)

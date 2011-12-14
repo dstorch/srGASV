@@ -1,8 +1,8 @@
 package splitread.align;
 
-import net.sf.samtools.SAMRecord;
 import splitread.Constants;
 import splitread.GASVCluster;
+import splitread.Read;
 import splitread.Utils;
 
 /**
@@ -17,9 +17,9 @@ public class InversionAligner extends Aligner
 
 	private boolean m_left;
 	
-	public InversionAligner(SAMRecord record, GASVCluster region, boolean left)
+	public InversionAligner(Read read, GASVCluster region, boolean left)
 	{
-		super(record, region);
+		super(read, region);
 		
 		m_left = left;
 		if (m_left) m_region2 = Utils.reverseComplement(m_region2);
@@ -41,13 +41,13 @@ public class InversionAligner extends Aligner
 		{
 			m_tableA[0][j] = 0;
 		}
-		for (int i = 1; i <= m_read.length; i++)
+		for (int i = 1; i <= m_seq.length; i++)
 		{
 			m_tableA[i][0] = i * Constants.GAP;
 		}
 
 		// fill table a
-		for (int i = 1; i <= m_read.length; i++)
+		for (int i = 1; i <= m_seq.length; i++)
 		{
 			m_tableMins[i] = Integer.MAX_VALUE;
 
@@ -55,7 +55,7 @@ public class InversionAligner extends Aligner
 			{
 				m_tableA[i][j] = Math.min(m_tableA[i-1][j] + Constants.GAP,
 						Math.min(m_tableA[i][j-1] + Constants.GAP,
-								m_tableA[i-1][j-1] + Constants.matchScore(m_read[i-1], m_region1[j-1])));
+								m_tableA[i-1][j-1] + Constants.matchScore(m_seq[i-1], m_region1[j-1])));
 
 				if (m_tableA[i][j] < m_tableMins[i])
 				{
@@ -73,20 +73,20 @@ public class InversionAligner extends Aligner
 		{
 			m_tableB[0][j] = 0;
 		}
-		for (int i = 1; i <= m_read.length; i++)
+		for (int i = 1; i <= m_seq.length; i++)
 		{
 			m_tableB[i][0] = i * Constants.GAP;
 		}
 
 		// fill table b
-		for (int i = 1; i <= m_read.length; i++)
+		for (int i = 1; i <= m_seq.length; i++)
 		{
 			for (int j = 1; j <= m_region2.length; j++)
 			{
 				m_tableB[i][j] = Math.min(m_tableB[i-1][j] + Constants.GAP,
 						Math.min(m_tableB[i][j-1] + Constants.GAP,
-								Math.min(m_tableB[i-1][j-1] + Constants.matchScore(m_read[i-1], m_region2[j-1]),
-										m_tableMins[i-1] + Constants.matchScore(m_read[i-1], m_region2[j-1]))));
+								Math.min(m_tableB[i-1][j-1] + Constants.matchScore(m_seq[i-1], m_region2[j-1]),
+										m_tableMins[i-1] + Constants.matchScore(m_seq[i-1], m_region2[j-1]))));
 			}
 		}
 	}
@@ -96,7 +96,7 @@ public class InversionAligner extends Aligner
 		// find the min in the last row of table b
 		int minVal = Integer.MAX_VALUE;
 		int minPos = -1;
-		int curI = m_read.length;
+		int curI = m_seq.length;
 		for (int j = 0; j <= m_region2.length; j++) {
 			if (m_tableB[curI][j] < minVal)
 			{
@@ -123,7 +123,7 @@ public class InversionAligner extends Aligner
 				if (m_tableB[curI-1][curJ] + Constants.GAP == m_tableB[curI][curJ])
 				{
 					curI--;
-					m_builder.appendRead(m_read[curI]);
+					m_builder.appendRead(m_seq[curI]);
 					m_builder.appendReference('-');
 				}
 				else if (m_tableB[curI][curJ-1] + Constants.GAP == m_tableB[curI][curJ])
@@ -132,16 +132,16 @@ public class InversionAligner extends Aligner
 					m_builder.appendRead('-');
 					m_builder.appendReference(m_region2[curJ]);
 				}
-				else if (m_tableB[curI-1][curJ-1] + Constants.matchScore(m_read[curI-1], m_region2[curJ-1]) == m_tableB[curI][curJ])
+				else if (m_tableB[curI-1][curJ-1] + Constants.matchScore(m_seq[curI-1], m_region2[curJ-1]) == m_tableB[curI][curJ])
 				{
 					curI--; curJ--;
-					m_builder.appendRead(m_read[curI]);
+					m_builder.appendRead(m_seq[curI]);
 					m_builder.appendReference(m_region2[curJ]);
 				}
-				else if (m_tableMins[curI-1] + Constants.matchScore(m_read[curI-1], m_region2[curJ-1]) == m_tableB[curI][curJ])
+				else if (m_tableMins[curI-1] + Constants.matchScore(m_seq[curI-1], m_region2[curJ-1]) == m_tableB[curI][curJ])
 				{
 					tableB = false;
-					m_builder.appendRead(m_read[curI-1]);
+					m_builder.appendRead(m_seq[curI-1]);
 					m_builder.appendReference(m_region2[curJ-1]);
 
 					m_builder.setBP2(m_gasvRegion.getRegionY().v - (curJ - 1), m_gasvRegion.getRightChromosome());
@@ -173,7 +173,7 @@ public class InversionAligner extends Aligner
 				if (m_tableA[curI-1][curJ] + Constants.GAP == m_tableA[curI][curJ])
 				{
 					curI--;
-					m_builder.appendRead(m_read[curI]);
+					m_builder.appendRead(m_seq[curI]);
 					m_builder.appendReference('-');
 				}
 				else if (m_tableA[curI][curJ-1] + Constants.GAP == m_tableA[curI][curJ])
@@ -182,10 +182,10 @@ public class InversionAligner extends Aligner
 					m_builder.appendRead('-');
 					m_builder.appendReference(m_region1[curJ]);
 				}
-				else if (m_tableA[curI-1][curJ-1] + Constants.matchScore(m_read[curI-1], m_region1[curJ-1]) == m_tableA[curI][curJ])
+				else if (m_tableA[curI-1][curJ-1] + Constants.matchScore(m_seq[curI-1], m_region1[curJ-1]) == m_tableA[curI][curJ])
 				{
 					curI--; curJ--;
-					m_builder.appendRead(m_read[curI]);
+					m_builder.appendRead(m_seq[curI]);
 					m_builder.appendReference(m_region1[curJ]);
 				}
 			}

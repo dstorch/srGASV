@@ -56,8 +56,9 @@ public class SplitReadWorker
 	 *    get candidates from the right
 	 * 
 	 * @throws SplitReadException
+	 * @throws ClassNotFoundException 
 	 */
-	private void oneSideSplitreads(GASVCluster region, boolean left) throws SplitReadException
+	private void oneSideSplitreads(GASVCluster region, boolean left) throws SplitReadException, ClassNotFoundException
 	{
 		Point location;
 		if (left) location = region.getRegionX();
@@ -65,11 +66,11 @@ public class SplitReadWorker
 		
 		Set<SAMRecord> mates = m_mapped.getSplitreadMates(region.getLeftChromosome(), location, left);
 		
-		List<SAMRecord> splits = m_unmapped.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
+		List<Read> splits = m_unmapped.getSplitreadCandidates(region.getLeftChromosome(), location, left, mates);
 		
-    	for (SAMRecord record : splits)
+    	for (Read read : splits)
     	{
-    		Aligner aligner = Aligner.create(record, region, left);
+    		Aligner aligner = Aligner.create(read, region, left);
     		Alignment alignment = aligner.align();
     		
     		// only print if the alignment distance is under the threshold
@@ -121,7 +122,7 @@ public class SplitReadWorker
     	}
 	}
 	
-	public void processOneRegion(GASVCluster region) throws SplitReadException
+	public void processOneRegion(GASVCluster region) throws SplitReadException, ClassNotFoundException
 	{
 		if (Constants.OUTPUT_FORMAT == Constants.OutputFormat.VERBOSE)
 		{
@@ -192,8 +193,9 @@ public class SplitReadWorker
 	 * @throws IOException
 	 * @throws InterruptedException
 	 * @throws SplitReadException
+	 * @throws ClassNotFoundException 
 	 */
-	public void processGASVOut() throws IOException, InterruptedException, SplitReadException
+	public void processGASVOut() throws IOException, InterruptedException, SplitReadException, ClassNotFoundException
 	{
 		m_grr.read(this);
 	}

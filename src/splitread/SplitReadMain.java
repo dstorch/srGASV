@@ -74,6 +74,11 @@ public class SplitReadMain
 			e.printStackTrace();
 			exitCode = 3;
 		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			exitCode = 4;
+		}
 		finally
 		{
 			srw.cleanup();
