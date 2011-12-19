@@ -206,6 +206,12 @@ public class InversionAligner extends Aligner
 		
 		boolean b = Utils.pointInPoly(m_gasvRegion, m_builder.getBP1(), m_builder.getBP2());
 		m_builder.setInPolygon(b);
+		
+		if (!m_left)
+		{
+			m_builder.setBP1(m_builder.getBP1() + 1, m_gasvRegion.getLeftChromosome());
+			m_builder.setBP2(m_builder.getBP2() + 1, m_gasvRegion.getRightChromosome());
+		}
 
 		return m_builder.build();
 	}

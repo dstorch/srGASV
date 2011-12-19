@@ -138,7 +138,6 @@ public class DeletionAligner extends Aligner
 					m_builder.appendRead(m_seq[curI-1]);
 					m_builder.appendReference(m_region2[curJ-1]);
 
-					// TODO double check this
 					m_builder.setBP2(m_gasvRegion.getRegionY().u + (curJ - 1), m_gasvRegion.getRightChromosome());
 
 					curJ = m_minLocations[curI-1];

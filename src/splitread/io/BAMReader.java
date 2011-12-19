@@ -94,13 +94,12 @@ public class BAMReader
 
 			if (hasMate)
 			{
-				// TODO account for mapping quality
-				//int mapq = curRecord.getMappingQuality();
+				int mapq = curRecord.getMappingQuality();
 
 				boolean oriented = curRecord.getReadNegativeStrandFlag();
 				if (left) oriented = !oriented;
 
-				if (oriented /*&& mapq >= Constants.MIN_MAPQ*/)
+				if (oriented && mapq >= Constants.MIN_MAPQ)
 				{	
 					candidates.add(curRecord);
 				}

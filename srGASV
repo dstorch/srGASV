@@ -4,12 +4,12 @@
 # Set parameters here
 LMIN=110
 LMAX=289
-MIN_MAPQ=45
+MIN_MAPQ=0
 DELTA_WINDOW=0
 MAX_ALIGNMENT_DIST=2
 MIN_PER_SIDE=10
-CHR_PREFIX=default
-OUTPUT_FORMAT=tabular
+CHR_PREFIX=chr
+OUTPUT_FORMAT=concise
 #########################################
 
 #########################################

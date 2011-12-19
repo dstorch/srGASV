@@ -1,5 +1,12 @@
 package splitread;
 
+/**
+ * Representation of a Read read in from SQLite
+ * database. Associates a read name with its sequence.
+ * 
+ * @author dstorch@cs.brown.edu
+ * @since December 2011
+ */
 public class Read
 {
 	private String m_name;

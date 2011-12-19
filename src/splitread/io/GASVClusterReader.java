@@ -50,7 +50,6 @@ public class GASVClusterReader
 				GASVCluster region = new GASVCluster(line.split("\t"));
 				srw.processOneRegion(region);
 			}
-			// TODO
 			catch(Exception e)
 			{
 				e.printStackTrace();
