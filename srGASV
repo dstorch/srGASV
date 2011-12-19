@@ -2,13 +2,13 @@
 
 #########################################
 # Set parameters here
-LMIN=100
-LMAX=300
+LMIN=110
+LMAX=289
 MIN_MAPQ=45
-DELTA_WINDOW=50
-MAX_ALIGNMENT_DIST=8
-MIN_PER_SIDE=4
-CHR_PREFIX=chr
+DELTA_WINDOW=0
+MAX_ALIGNMENT_DIST=2
+MIN_PER_SIDE=10
+CHR_PREFIX=default
 OUTPUT_FORMAT=tabular
 #########################################
 

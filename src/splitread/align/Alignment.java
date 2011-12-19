@@ -29,6 +29,7 @@ public class Alignment
 	private final String m_referenceAlignment;
 	private final String m_readAlignment;
 	private final String m_readSplitSeq;
+	private final boolean m_inPolygon;
 
 	private Alignment(AlignmentBuilder builder)
 	{
@@ -42,6 +43,7 @@ public class Alignment
 		m_referenceAlignment = builder.getReference();
 		m_readAlignment = builder.getReadAlignment();
 		m_readSplitSeq = builder.getReadSplitSeq();
+		m_inPolygon = builder.getInPolygon();
 	}
 
 	/**
@@ -69,6 +71,7 @@ public class Alignment
 		private String referenceAlignment;
 		private String readAlignment;
 		private String readSplitSeq;
+		private boolean inPolygon;
 
 		public AlignmentBuilder()
 		{
@@ -196,14 +199,25 @@ public class Alignment
 		{
 			return this.readSplitSeq;
 		}
+		
+		public AlignmentBuilder setInPolygon(boolean b)
+		{
+			this.inPolygon = b;
+			return this;
+		}
+		
+		public boolean getInPolygon()
+		{
+			return this.inPolygon;
+		}
 
 	}
 
 	public void printTabular()
 	{
-		Constants.OUTPUT_STREAM.printf("%s\t%s\t%s\t%d:%d, %d:%d\t%d\t%s\n", m_gasvRegion.getClusterName(),
+		Constants.OUTPUT_STREAM.printf("%s\t%s\t%s\t%d:%d, %d:%d\t%b\t%d\t%s\n", m_gasvRegion.getClusterName(),
 				  						m_read.getName(), m_gasvRegion, m_chr1, m_bp1,
-										m_chr2, m_bp2, m_score, m_readSplitSeq);
+										m_chr2, m_bp2, m_inPolygon, m_score, m_readSplitSeq);
 	}
 	
 	public void printVerbose()
@@ -219,7 +233,8 @@ public class Alignment
 	
 	public void printSimple()
 	{
-		Constants.OUTPUT_STREAM.println("alignent score: " + m_score);
+		Constants.OUTPUT_STREAM.println("aligment score: " + m_score);
+		Constants.OUTPUT_STREAM.println("breakpoints: " + m_bp1 + " " + m_bp2);
 		Constants.OUTPUT_STREAM.println(m_referenceAlignment);
 		Constants.OUTPUT_STREAM.println(m_readAlignment);
 	}
@@ -252,6 +267,11 @@ public class Alignment
 	public String getReadSplitSeq()
 	{
 		return m_readSplitSeq;
+	}
+	
+	public boolean inPolygon()
+	{
+		return m_inPolygon;
 	}
 	
 	// number of characters left of the split

@@ -79,6 +79,10 @@ public class SplitReadMain
 			e.printStackTrace();
 			exitCode = 4;
 		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		finally
 		{
 			srw.cleanup();

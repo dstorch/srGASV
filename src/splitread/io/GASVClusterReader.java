@@ -40,11 +40,23 @@ public class GASVClusterReader
 	
 	public void read(SplitReadWorker srw) throws IOException, SplitReadException, ClassNotFoundException
 	{	
+		int counter = 0;
 		String line;
 		while ((line = m_reader.readLine()) != null)
 		{
-			GASVCluster region = new GASVCluster(line.split("\t"));
-			srw.processOneRegion(region);
+			counter++;
+			try
+			{
+				GASVCluster region = new GASVCluster(line.split("\t"));
+				srw.processOneRegion(region);
+			}
+			// TODO
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				System.err.println("Skipping line: " + counter);
+				continue;
+			}
 		}
 	}
 	

@@ -76,6 +76,24 @@ public class GASVCluster
 		m_regionX.v += Constants.DELTA_WINDOW;
 		m_regionY.u -= Constants.DELTA_WINDOW;
 		m_regionY.v += Constants.DELTA_WINDOW;
+		
+		// boost region size if smaller than 100 bp
+		if (m_regionX.v - m_regionX.u < 100)
+		{
+			int boost = (100 - (m_regionX.v - m_regionX.u)) / 2 + 1;
+			m_regionX.u -= boost;
+			m_regionX.v += boost;
+		}
+		if (m_regionY.v - m_regionY.u < 100)
+		{
+			int boost = (100 - (m_regionY.v - m_regionY.u)) / 2 + 1;
+			m_regionY.u -= boost;
+			m_regionY.v += boost;
+		}
+		
+		// region must be at least 100bp
+		assert(m_regionX.v - m_regionX.u > 100);
+		assert(m_regionY.v - m_regionY.u > 100);
 
 		// obtain sequences from the reference genome
 		IReferenceGenome genome = IReferenceGenome.GenomeFactory.getInstance();

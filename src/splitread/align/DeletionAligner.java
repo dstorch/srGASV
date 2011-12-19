@@ -3,6 +3,7 @@ package splitread.align;
 import splitread.Constants;
 import splitread.GASVCluster;
 import splitread.Read;
+import splitread.Utils;
 
 /**
  * Implements split read alignment for
@@ -137,7 +138,8 @@ public class DeletionAligner extends Aligner
 					m_builder.appendRead(m_seq[curI-1]);
 					m_builder.appendReference(m_region2[curJ-1]);
 
-					m_builder.setBP2(m_gasvRegion.getRegionY().v - (curJ - 1), m_gasvRegion.getRightChromosome());
+					// TODO double check this
+					m_builder.setBP2(m_gasvRegion.getRegionY().u + (curJ - 1), m_gasvRegion.getRightChromosome());
 
 					curJ = m_minLocations[curI-1];
 					curI--;
@@ -178,6 +180,9 @@ public class DeletionAligner extends Aligner
 			m_builder.appendRead('-');
 			m_builder.appendReference(m_region1[counter]);
 		}
+		
+		boolean b = Utils.pointInPoly(m_gasvRegion, m_builder.getBP1(), m_builder.getBP2());
+		m_builder.setInPolygon(b);
 
 		return m_builder.build();
 	}

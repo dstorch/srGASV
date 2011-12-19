@@ -14,6 +14,7 @@
 #   3. Parameters
 #   4. Output format
 #   5. Dependencies
+#   6. High-throughput usage
 #
 ##################################################
 
@@ -116,7 +117,8 @@ OUTPUT_FORMAT - set to either "verbose", "tabular", or "concise"
 ##################################################
 
 The tabular output format consists of the following
-tab-delimited fields:
+tab-delimited fields. There is one line per candidate
+split-read.
 
 1. GASV cluster name
 2. Read name extracted from the BAM file
@@ -128,11 +130,25 @@ tab-delimited fields:
    The format for this field is <chr1>:b1, <chr2>:b2.
    The breakpoints b1 and b2 are on chromosomes <chr1>
    and <chr2> respectively.
-5. Alignment score
+5. Breakpoint polygon
+   This boolean field is true if the detected breakpoints
+   fall within the breakpoint polygon, and is false
+   otherwise.
+6. Alignment score
    The default scoring is a penalty of 1 for both mismatches
    and gaps.
-6. Sequence of the split read
+7. Sequence of the split read
    A pipe ("|") is used to denote the split.
+
+The concise output format has one line per GASV input
+cluster. Each line contains the following tab-delimited fields:
+
+1. GASV cluster name
+2. GASV regions
+3. consensus breakpoint 1
+4. consensus breakpoint 2
+5. number of reads supporting bp1
+6. number of reads supporting bp2
 
 ##################################################
 5. Dependencies
@@ -148,3 +164,34 @@ Picard
   The jar file should be checked out with the
   rest of the source code.
  
+SQLite JDBC driver
+  This is necessary for running srGASV in a high-
+  throughput way. The data from an unmapped BAM
+  file is stored in an indexed sqlite database table.
+  Then, unmapped reads are retrieved via JDBC during
+  the split-read alignment process. More on running
+  srGASV using a SQLite database can be found in
+  the next section. The jar file for the driver
+  is packaged with the srGASV source code.
+
+##################################################
+6. High-throughput usage
+##################################################
+
+Given as input the unmapped reads file unmapped.bam,
+srGASV checks to see if the file unmapped.bam.db exists.
+If so, it assumes that it is a SQLite database containing
+the following table:
+
+CREATE TABLE bamfile (name varchar(50), sequence varchar(100) );
+
+The table should be indexed by read name using the
+following SQL command:
+
+CREATE INDEX bamindex on bamfile(name);
+
+In order to populate the database table, the utility
+script src/script/makedb.py is provided. See the
+comments in this script for usage.
+
+

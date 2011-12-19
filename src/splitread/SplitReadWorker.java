@@ -124,6 +124,10 @@ public class SplitReadWorker
 	
 	public void processOneRegion(GASVCluster region) throws SplitReadException, ClassNotFoundException
 	{
+		// clear counts from last cluster
+		m_bp1hist.clear();
+		m_bp2hist.clear();
+		
 		if (Constants.OUTPUT_FORMAT == Constants.OutputFormat.VERBOSE)
 		{
 			Constants.OUTPUT_STREAM.println(region);
@@ -209,7 +213,10 @@ public class SplitReadWorker
 			m_mapped.close();
 			m_unmapped.close();
 		}
-		catch (IOException e) {}
+		catch (IOException e)
+		{
+			System.err.println(e.getMessage());
+		}
 	}
 	
 }

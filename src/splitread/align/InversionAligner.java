@@ -190,6 +190,10 @@ public class InversionAligner extends Aligner
 				}
 			}
 		}
+		
+		// guard against bad J values
+		// happens when entire read gets aligned to table 2
+		if (curJ > m_region1.length) curJ = m_region1.length;
 
 		// put mismatches on the beginning of alignment strings
 		for (int counter = curJ - 1; counter >= 0; counter--)
@@ -199,6 +203,9 @@ public class InversionAligner extends Aligner
 		}
 		
 		fixAlignmentString();
+		
+		boolean b = Utils.pointInPoly(m_gasvRegion, m_builder.getBP1(), m_builder.getBP2());
+		m_builder.setInPolygon(b);
 
 		return m_builder.build();
 	}

@@ -69,7 +69,7 @@ public class BAMReader
 	{
 		if (!m_reader.hasIndex())
 		{
-			throw new SplitReadException("BAM file has no index");
+			throw new SplitReadException("mapped BAM file has no index");
 		}
 
 		Set<SAMRecord> candidates = new HashSet<SAMRecord>();
@@ -158,13 +158,14 @@ public class BAMReader
 	}
 
 	public List<Read> getReadsFromDB(Set<SAMRecord> mates) throws ClassNotFoundException
-	{
+	{	
 		List<Read> candidates = new LinkedList<Read>();
 		Set<String> seqset = new HashSet<String>();
 
 		for (SAMRecord mate : mates)
 		{
 			String readName = mate.getReadName();
+			String anchorSeq = mate.getReadString();
 			String sql = "select * from bamfile where name = '" + readName + "';";
 
 			try
@@ -175,8 +176,9 @@ public class BAMReader
 				{
 					String sequence = m_resultSet.getString("sequence");
 					boolean nonRedundant = !seqset.contains(sequence);
+					boolean isSplit = !sequence.equals(anchorSeq);
 
-					if (nonRedundant)
+					if (nonRedundant && isSplit)
 					{
 						Read read = new Read(readName, sequence);
 						candidates.add(read);
@@ -194,11 +196,10 @@ public class BAMReader
 	}
 
 	public void close()
-	{
-		m_reader.close();
-		
+	{	
 		try
 		{
+			m_reader.close();
 			m_resultSet.close();
 			m_statement.close();
 			m_connection.close();
